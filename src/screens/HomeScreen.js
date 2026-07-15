@@ -25,6 +25,49 @@ const { width } = Dimensions.get('window');
 const TILE_GAP = 12;
 const TILE_WIDTH = (width - spacing.lg * 2 - TILE_GAP) / 2;
 const ICON = 30;
+const GREEN = colors.accentGreen;
+
+// Two-tone (purple + green) composite marks matching the reference tiles.
+const CardIcon = (c) => (
+  <View style={{ width: ICON, height: ICON, alignItems: 'center', justifyContent: 'center' }}>
+    <MaterialCommunityIcons name="credit-card-outline" size={ICON} color={c} />
+    <View style={{ position: 'absolute', left: ICON * 0.24, top: ICON * 0.44, width: ICON * 0.18, height: ICON * 0.13, borderRadius: 2, backgroundColor: GREEN }} />
+  </View>
+);
+
+const QrIcon = (c) => (
+  <View style={{ width: ICON, height: ICON, alignItems: 'center', justifyContent: 'center' }}>
+    <MaterialCommunityIcons name="qrcode-scan" size={ICON - 2} color={c} />
+    <MaterialCommunityIcons name="qrcode" size={(ICON - 2) * 0.4} color={GREEN} style={{ position: 'absolute', right: ICON * 0.06, bottom: ICON * 0.06 }} />
+  </View>
+);
+
+const ZakatIcon = (c) => (
+  <View style={{ width: ICON, height: ICON, alignItems: 'center', justifyContent: 'flex-end' }}>
+    <FontAwesome5 name="hand-holding" size={ICON - 4} color={c} />
+    <View style={{ position: 'absolute', top: 0, left: ICON * 0.28, width: ICON * 0.44, height: ICON * 0.44, borderRadius: ICON, backgroundColor: GREEN, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ fontSize: 8, fontWeight: '800', color: colors.white }}>Rs</Text>
+    </View>
+  </View>
+);
+
+const FundsIcon = (c) => (
+  <View style={{ width: ICON, height: ICON, justifyContent: 'flex-end' }}>
+    <View style={{ flexDirection: 'row', alignItems: 'flex-end', height: ICON * 0.78, borderLeftWidth: 2, borderBottomWidth: 2, borderColor: c, paddingLeft: 3 }}>
+      {[[0.35, GREEN], [0.62, c], [0.48, GREEN], [0.85, c]].map(([h, col], i) => (
+        <View key={i} style={{ width: 4, height: ICON * 0.78 * h, backgroundColor: col, marginRight: 3, borderTopLeftRadius: 1, borderTopRightRadius: 1 }} />
+      ))}
+    </View>
+  </View>
+);
+
+const PayOrderIcon = (c) => (
+  <View style={{ width: ICON, height: ICON * 0.7, borderWidth: 1.6, borderColor: c, borderRadius: 3, paddingHorizontal: 3, paddingTop: 2 }}>
+    <Text style={{ fontSize: 7, fontWeight: '800', color: c }}>Rs</Text>
+    <View style={{ height: 1.6, backgroundColor: c, width: '78%', marginTop: 3 }} />
+    <View style={{ height: 1.6, backgroundColor: c, width: '55%', marginTop: 2 }} />
+  </View>
+);
 
 // Feature tiles laid out to match the reference layout.
 const FEATURES = [
@@ -62,12 +105,12 @@ const FEATURES = [
       </View>
     ),
   },
-  { key: 'card', label: 'Card Management', icon: (c) => <MaterialCommunityIcons name="credit-card-outline" size={ICON} color={c} /> },
-  { key: 'qr', label: 'QR Payments', icon: (c) => <MaterialCommunityIcons name="qrcode-scan" size={ICON - 2} color={c} /> },
-  { key: 'zakat', label: 'Zakat & Sadqaat', icon: (c) => <FontAwesome5 name="hand-holding-usd" size={ICON - 4} color={c} /> },
-  { key: 'funds', label: 'Mutual Funds', icon: (c) => <MaterialCommunityIcons name="chart-bar" size={ICON} color={c} /> },
+  { key: 'card', label: 'Card Management', icon: CardIcon },
+  { key: 'qr', label: 'QR Payments', icon: QrIcon },
+  { key: 'zakat', label: 'Zakat & Sadqaat', icon: ZakatIcon },
+  { key: 'funds', label: 'Al Meezan Mutual Funds', icon: FundsIcon },
   { key: 'payoneer', label: 'Payoneer', icon: () => <Image source={require('../../assets/payoneer.png')} style={{ width: ICON + 4, height: ICON + 4 }} resizeMode="contain" /> },
-  { key: 'payorder', label: 'Request Pay Order', icon: (c) => <MaterialCommunityIcons name="file-document-outline" size={ICON} color={c} /> },
+  { key: 'payorder', label: 'Request Pay Order', icon: PayOrderIcon },
   { key: 'feedback', label: 'Feedback', icon: (c) => <MaterialCommunityIcons name="message-reply-text-outline" size={ICON - 2} color={c} /> },
 ];
 
