@@ -77,7 +77,7 @@ export default function App() {
             <Stack.Screen
               name="Receipt"
               component={ReceiptScreen}
-              options={{ title: 'Transaction Receipt' }}
+              options={{ headerShown: false }}
             />
 
             {/* Side-menu screens */}

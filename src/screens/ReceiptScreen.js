@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { captureRef } from 'react-native-view-shot';
@@ -240,23 +240,18 @@ export default function ReceiptScreen({ navigation, route }) {
 
   return (
     <View style={styles.root}>
-      {/* Minimal gradient header with home / power */}
-      <LinearGradient
-        colors={[colors.gradientStart, colors.gradientEnd]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-      >
-        <View style={{ height: insets.top }} />
-        <View style={styles.header}>
-          <View style={{ flex: 1 }} />
-          <TouchableOpacity onPress={goHome} style={styles.hBtn}>
-            <Ionicons name="home" size={22} color={colors.white} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={goHome} style={styles.hBtn}>
-            <Ionicons name="power" size={22} color={colors.white} />
-          </TouchableOpacity>
-        </View>
-      </LinearGradient>
+      <StatusBar style="dark" />
+      {/* Light header with home / power icons pinned to the top-right */}
+      <View style={{ height: insets.top }} />
+      <View style={styles.header}>
+        <View style={{ flex: 1 }} />
+        <TouchableOpacity onPress={goHome} style={styles.hBtn}>
+          <Ionicons name="home" size={24} color={colors.primary} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={goHome} style={styles.hBtn}>
+          <Ionicons name="power" size={24} color={colors.primary} />
+        </TouchableOpacity>
+      </View>
 
       <ScrollView contentContainerStyle={styles.body}>
         <View style={styles.checkWrap}>
@@ -335,8 +330,8 @@ export default function ReceiptScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.screenBg },
 
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.sm, height: 52 },
-  hBtn: { padding: 6 },
+  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.md, height: 44 },
+  hBtn: { padding: 6, marginLeft: spacing.sm },
 
   body: { padding: spacing.lg, paddingTop: spacing.xl },
 
