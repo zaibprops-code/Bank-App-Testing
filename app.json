@@ -21,13 +21,27 @@
           "savePhotosPermission": "Allow $(PRODUCT_NAME) to save transaction receipts to your gallery.",
           "isAccessMediaLocationEnabled": false
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to find the Qibla direction and nearby branches."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID to unlock the app."
+        }
       ]
     ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.example.bankapptesting",
       "infoPlist": {
-        "NSPhotoLibraryAddUsageDescription": "Allow Bank App to save transaction receipts to your gallery."
+        "NSPhotoLibraryAddUsageDescription": "Allow Bank App to save transaction receipts to your gallery.",
+        "NSLocationWhenInUseUsageDescription": "Allow Bank App to use your location to find the Qibla direction and nearby branches.",
+        "NSFaceIDUsageDescription": "Allow Bank App to use Face ID to unlock the app."
       }
     },
     "android": {

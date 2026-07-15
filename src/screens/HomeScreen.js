@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -18,8 +18,10 @@ import {
   MaterialIcons,
 } from '@expo/vector-icons';
 import { useAccount } from '../context/AccountContext';
+import { useSettings } from '../context/SettingsContext';
 import { branding } from '../config/branding';
 import { colors, spacing } from '../theme';
+import SideMenu from '../components/SideMenu';
 
 const { width } = Dimensions.get('window');
 const TILE_GAP = 12;
@@ -125,7 +127,14 @@ export default function HomeScreen({ navigation }) {
     balance,
     formatMoney,
   } = useAccount();
+  const settings = useSettings();
   const [showBalance, setShowBalance] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Reflect the "Show balance on Home" preference once settings have loaded.
+  useEffect(() => {
+    if (settings.loaded) setShowBalance(settings.showBalanceOnHome);
+  }, [settings.loaded, settings.showBalanceOnHome]);
 
   const onShare = async () => {
     try {
@@ -150,7 +159,7 @@ export default function HomeScreen({ navigation }) {
       >
         <View style={{ height: insets.top }} />
         <View style={styles.appBar}>
-          <TouchableOpacity style={styles.appBarBtn}>
+          <TouchableOpacity style={styles.appBarBtn} onPress={() => setMenuOpen(true)}>
             <Ionicons name="menu" size={28} color={colors.white} />
           </TouchableOpacity>
           <View style={styles.logoCircle}>
@@ -235,6 +244,12 @@ export default function HomeScreen({ navigation }) {
           ))}
         </View>
       </ScrollView>
+
+      <SideMenu
+        visible={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onNavigate={(route) => navigation.navigate(route)}
+      />
     </View>
   );
 }

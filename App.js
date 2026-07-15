@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AccountProvider } from './src/context/AccountContext';
+import { SettingsProvider } from './src/context/SettingsContext';
+import AppLockGate from './src/components/AppLockGate';
 import HomeScreen from './src/screens/HomeScreen';
 import TransactionsScreen from './src/screens/TransactionsScreen';
 import SendMoneyScreen from './src/screens/SendMoneyScreen';
@@ -12,6 +14,17 @@ import NewTransferScreen from './src/screens/NewTransferScreen';
 import BankTransferScreen from './src/screens/BankTransferScreen';
 import AmountScreen from './src/screens/AmountScreen';
 import ReceiptScreen from './src/screens/ReceiptScreen';
+import ProfileScreen from './src/screens/menu/ProfileScreen';
+import AccountsScreen from './src/screens/menu/AccountsScreen';
+import SettingsScreen from './src/screens/menu/SettingsScreen';
+import NotificationsScreen from './src/screens/menu/NotificationsScreen';
+import QiblaScreen from './src/screens/menu/QiblaScreen';
+import FaqsScreen from './src/screens/menu/FaqsScreen';
+import DealsScreen from './src/screens/menu/DealsScreen';
+import TermsScreen from './src/screens/menu/TermsScreen';
+import ChargesScreen from './src/screens/menu/ChargesScreen';
+import LocateUsScreen from './src/screens/menu/LocateUsScreen';
+import ContactUsScreen from './src/screens/menu/ContactUsScreen';
 import { colors } from './src/theme';
 
 const Stack = createNativeStackNavigator();
@@ -20,7 +33,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <AccountProvider>
+        <SettingsProvider>
         <StatusBar style="light" />
+        <AppLockGate>
         <NavigationContainer>
           <Stack.Navigator
             screenOptions={{
@@ -64,8 +79,23 @@ export default function App() {
               component={ReceiptScreen}
               options={{ title: 'Transaction Receipt' }}
             />
+
+            {/* Side-menu screens */}
+            <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'My Profile' }} />
+            <Stack.Screen name="Accounts" component={AccountsScreen} options={{ title: 'My Accounts' }} />
+            <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
+            <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ title: 'Notifications' }} />
+            <Stack.Screen name="Qibla" component={QiblaScreen} options={{ title: 'Qibla' }} />
+            <Stack.Screen name="Faqs" component={FaqsScreen} options={{ title: 'FAQs' }} />
+            <Stack.Screen name="Deals" component={DealsScreen} options={{ title: 'Deals & Discounts' }} />
+            <Stack.Screen name="Terms" component={TermsScreen} options={{ title: 'Terms & Conditions' }} />
+            <Stack.Screen name="Charges" component={ChargesScreen} options={{ title: 'Schedule of Charges' }} />
+            <Stack.Screen name="LocateUs" component={LocateUsScreen} options={{ title: 'Locate Us' }} />
+            <Stack.Screen name="ContactUs" component={ContactUsScreen} options={{ title: 'Contact Us' }} />
           </Stack.Navigator>
         </NavigationContainer>
+        </AppLockGate>
+        </SettingsProvider>
       </AccountProvider>
     </SafeAreaProvider>
   );
