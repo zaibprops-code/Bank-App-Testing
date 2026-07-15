@@ -7,8 +7,8 @@ export const colors = {
   primaryLight: '#7A2E8E',
   accentGreen: '#1EA34F',    // "SHOW BALANCE" green text
   yellow: '#F4C400',
-  screenBg: '#FFFFFF',       // white page background
-  cardBg: '#FFFFFF',
+  screenBg: '#EFEFF1',       // light grey page background (cards sit on top in white)
+  cardBg: '#FFFFFF',         // pure white cards / tiles
   textDark: '#2A2A2E',
   textMuted: '#8A8F9A',
   tileBorder: '#ECECF0',
