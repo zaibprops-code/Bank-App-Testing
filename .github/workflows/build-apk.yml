@@ -1,7 +1,9 @@
 name: Build Android APK
 
-# Builds an installable **debug** APK in GitHub's cloud.
-# No Expo account, no secrets, no signing keys required.
+# Builds an installable **release** APK in GitHub's cloud. A release APK
+# bundles the JS inside the file, so it runs standalone on the phone with no
+# computer / Metro server. Signed with the default debug keystore so it
+# installs directly. No Expo account or secrets required.
 # Run it from the "Actions" tab (Run workflow), or it runs automatically on push.
 
 on:
@@ -51,12 +53,12 @@ jobs:
           echo "org.gradle.workers.max=2" >> android/gradle.properties
           echo "android.enableJetifier=false" >> android/gradle.properties
 
-      - name: Build debug APK
+      - name: Build release APK (standalone, JS bundled inside)
         working-directory: android
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew assembleRelease --no-daemon
 
       - name: Rename APK
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk bank-app-testing.apk
+        run: cp android/app/build/outputs/apk/release/app-release.apk bank-app-testing.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -71,7 +73,7 @@ jobs:
           tag_name: latest
           name: Latest APK build
           body: |
-            Debug APK for the Bank App demo.
+            Standalone release APK for the Bank App demo (runs offline, no computer needed).
             Download **bank-app-testing.apk** below and install it on your Android phone.
           files: bank-app-testing.apk
           make_latest: true
