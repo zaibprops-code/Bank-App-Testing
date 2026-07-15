@@ -181,7 +181,12 @@ export default function HomeScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
       >
         {/* Account card */}
-        <View style={styles.card}>
+        <LinearGradient
+          colors={['#F7F1FB', '#ECE0F4']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={styles.card}
+        >
           <View style={styles.cardHeaderRow}>
             <View style={{ flex: 1 }}>
               <Text style={styles.name} numberOfLines={1}>{accountTitle}</Text>
@@ -227,7 +232,7 @@ export default function HomeScreen({ navigation }) {
               <Text style={styles.actionText}>Transactions</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </LinearGradient>
 
         {/* Feature tiles */}
         <View style={styles.grid}>
@@ -279,10 +284,10 @@ const styles = StyleSheet.create({
   appBarTitle: { color: colors.white, fontSize: 19, fontWeight: '700' },
 
   card: {
-    backgroundColor: colors.cardBg,
     borderRadius: 10,
     padding: spacing.lg,
     marginTop: spacing.xs,
+    overflow: 'hidden',
     elevation: 2,
     shadowColor: '#000',
     shadowOpacity: 0.08,
@@ -296,12 +301,10 @@ const styles = StyleSheet.create({
   refreshBtn: { padding: 4 },
   showBalanceBox: {
     marginTop: spacing.lg,
-    borderWidth: 1,
-    borderColor: '#E4E4E8',
     borderRadius: 8,
-    paddingVertical: 16,
+    paddingVertical: 14,
     alignItems: 'center',
-    backgroundColor: '#FCFCFD',
+    backgroundColor: 'transparent',
   },
   showBalanceText: {
     color: colors.accentGreen,
