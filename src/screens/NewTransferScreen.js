@@ -23,7 +23,7 @@ const OWN_BANK = { key: 'meezan', name: 'Meezan Bank', logo: require('../../asse
 
 const OTHER_BANKS = [
   { key: 'jazzcash', name: 'Jazz Cash Wallet', logo: require('../../assets/banks/jazzcash.png') },
-  { key: 'easypaisa', name: 'EasyPaisa-Telenor Bank', logo: require('../../assets/banks/easypaisa.jpg') },
+  { key: 'easypaisa', name: 'EasyPaisa-Telenor Bank', logo: require('../../assets/banks/easypaisa.png') },
   { key: 'hblkonnect', name: 'HBL KONNECT', logo: require('../../assets/banks/hbl.png') },
   { key: 'ubl', name: 'UBL', logo: require('../../assets/banks/ubl.png') },
   { key: 'alfalah', name: 'Bank Alfalah', logo: require('../../assets/banks/alfalah.png') },
