@@ -50,7 +50,7 @@ export default function NewTransferScreen({ navigation }) {
   const own = match(OWN_BANK) ? [OWN_BANK] : [];
   const others = OTHER_BANKS.filter(match);
 
-  const pick = (bank) => navigation.navigate('SendMoney', { presetTitle: bank.name });
+  const pick = (bank) => navigation.navigate('BankTransfer', { bank });
 
   const renderRow = (b) => (
     <TouchableOpacity key={b.key} style={styles.card} activeOpacity={0.7} onPress={() => pick(b)}>
