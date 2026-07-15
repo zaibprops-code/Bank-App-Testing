@@ -10,6 +10,7 @@ import TransactionsScreen from './src/screens/TransactionsScreen';
 import SendMoneyScreen from './src/screens/SendMoneyScreen';
 import NewTransferScreen from './src/screens/NewTransferScreen';
 import BankTransferScreen from './src/screens/BankTransferScreen';
+import AmountScreen from './src/screens/AmountScreen';
 import ReceiptScreen from './src/screens/ReceiptScreen';
 import { colors } from './src/theme';
 
@@ -46,6 +47,11 @@ export default function App() {
             <Stack.Screen
               name="BankTransfer"
               component={BankTransferScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Amount"
+              component={AmountScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

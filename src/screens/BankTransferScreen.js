@@ -21,6 +21,8 @@ export default function BankTransferScreen({ navigation, route }) {
   const bank = route?.params?.bank || { name: 'Bank' };
   const [mode, setMode] = useState('account'); // 'account' | 'iban'
   const [value, setValue] = useState('');
+  const [fetched, setFetched] = useState(false);
+  const [accountTitle, setAccountTitle] = useState('');
 
   const isAccount = mode === 'account';
   const bankUpper = (bank.name || 'BANK').toUpperCase();
@@ -31,12 +33,24 @@ export default function BankTransferScreen({ navigation, route }) {
   const canFetch = value.trim().length > 0;
   const onFetch = () => {
     if (!canFetch) return;
-    navigation.navigate('SendMoney', { presetTitle: bank.name });
+    setFetched(true);
+  };
+
+  const canNext = accountTitle.trim().length > 0;
+  const onNext = () => {
+    if (!canNext) return;
+    navigation.navigate('Amount', {
+      bank,
+      accountNumber: value.trim(),
+      accountTitle: accountTitle.trim(),
+    });
   };
 
   const switchMode = (m) => {
     setMode(m);
     setValue('');
+    setAccountTitle('');
+    setFetched(false);
   };
 
   return (
@@ -69,7 +83,7 @@ export default function BankTransferScreen({ navigation, route }) {
       >
         <ScrollView
           style={styles.body}
-          contentContainerStyle={{ padding: spacing.lg }}
+          contentContainerStyle={{ padding: spacing.lg, flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
         >
           {/* Selected bank */}
@@ -100,7 +114,7 @@ export default function BankTransferScreen({ navigation, route }) {
 
           <Text style={styles.fieldLabel}>{isAccount ? 'Account Number' : 'IBAN'}</Text>
 
-          <View style={styles.inputRow}>
+          <View style={[styles.inputRow, fetched && styles.inputRowDisabled]}>
             <TextInput
               style={styles.input}
               value={value}
@@ -108,23 +122,48 @@ export default function BankTransferScreen({ navigation, route }) {
               keyboardType={isAccount ? 'number-pad' : 'default'}
               autoCapitalize="characters"
               autoCorrect={false}
+              editable={!fetched}
             />
             <TouchableOpacity style={styles.helpBtn} activeOpacity={0.7}>
               <Text style={styles.helpText}>?</Text>
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.hint}>{hint}</Text>
+          {!fetched && <Text style={styles.hint}>{hint}</Text>}
 
-          <TouchableOpacity
-            style={[styles.fetchBtn, !canFetch && styles.fetchBtnDisabled]}
-            onPress={onFetch}
-            activeOpacity={canFetch ? 0.85 : 1}
-          >
-            <Text style={[styles.fetchText, !canFetch && styles.fetchTextDisabled]}>
-              Fetch Account Details
-            </Text>
-          </TouchableOpacity>
+          {!fetched ? (
+            <TouchableOpacity
+              style={[styles.fetchBtn, !canFetch && styles.fetchBtnDisabled]}
+              onPress={onFetch}
+              activeOpacity={canFetch ? 0.85 : 1}
+            >
+              <Text style={[styles.fetchText, !canFetch && styles.fetchTextDisabled]}>
+                Fetch Account Details
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <>
+              <View style={styles.titleCard}>
+                <Text style={styles.titleLabel}>Account Title</Text>
+                <TextInput
+                  style={styles.titleInput}
+                  value={accountTitle}
+                  onChangeText={setAccountTitle}
+                  placeholder="Enter account title"
+                  placeholderTextColor={colors.textMuted}
+                  autoCapitalize="characters"
+                />
+              </View>
+
+              <TouchableOpacity
+                style={[styles.nextBtn, !canNext && styles.fetchBtnDisabled]}
+                onPress={onNext}
+                activeOpacity={canNext ? 0.85 : 1}
+              >
+                <Text style={[styles.fetchText, !canNext && styles.fetchTextDisabled]}>Next</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -210,4 +249,29 @@ const styles = StyleSheet.create({
   fetchBtnDisabled: { backgroundColor: '#D9D9DE' },
   fetchText: { color: colors.white, fontWeight: '800', fontSize: 16 },
   fetchTextDisabled: { color: '#8A8F9A' },
+
+  inputRowDisabled: { backgroundColor: '#D9D9DE', borderColor: '#C9C9CE' },
+
+  titleCard: {
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    marginTop: spacing.md,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  titleLabel: { fontSize: 12, color: colors.buttonPurple, fontWeight: '700', marginBottom: 2 },
+  titleInput: { fontSize: 16, fontWeight: '700', color: colors.textDark, paddingVertical: 4 },
+
+  nextBtn: {
+    marginTop: 'auto',
+    backgroundColor: colors.buttonPurple,
+    borderRadius: 8,
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
 });
