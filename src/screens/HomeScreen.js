@@ -28,8 +28,28 @@ const ICON = 30;
 
 // Feature tiles laid out to match the reference layout.
 const FEATURES = [
-  { key: 'send', label: 'Send Money', icon: (c) => <MaterialCommunityIcons name="bank-transfer" size={ICON + 4} color={c} /> },
-  { key: 'topup', label: 'Mobile Topup', icon: (c) => <MaterialCommunityIcons name="cellphone-arrow-down" size={ICON} color={c} /> },
+  {
+    key: 'send',
+    label: 'Send Money',
+    // Money-transfer curved arrows wrapped around the "Rs" currency mark.
+    icon: (c) => (
+      <View style={{ width: ICON + 8, height: ICON + 8, alignItems: 'center', justifyContent: 'center' }}>
+        <MaterialCommunityIcons name="sync" size={ICON + 8} color={c} />
+        <Text style={{ position: 'absolute', fontSize: 11, fontWeight: '800', color: c }}>Rs</Text>
+      </View>
+    ),
+  },
+  {
+    key: 'topup',
+    label: 'Mobile Topup',
+    // Phone with a circular recharge/topup arrow.
+    icon: (c) => (
+      <View style={{ width: ICON, height: ICON, alignItems: 'center', justifyContent: 'center' }}>
+        <MaterialCommunityIcons name="cellphone" size={ICON} color={c} />
+        <MaterialCommunityIcons name="sync" size={ICON * 0.5} color={c} style={{ position: 'absolute' }} />
+      </View>
+    ),
+  },
   { key: 'raast', label: 'Raast Payment', icon: (c) => <MaterialCommunityIcons name="flash" size={ICON} color={c} /> },
   { key: 'bills', label: 'Bill Payments', icon: (c) => <Ionicons name="receipt-outline" size={ICON - 2} color={c} /> },
   { key: 'card', label: 'Card Management', icon: (c) => <MaterialCommunityIcons name="credit-card-outline" size={ICON} color={c} /> },
