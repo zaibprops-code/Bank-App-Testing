@@ -3,7 +3,7 @@ export const colors = {
   primary: '#5E2A7E',        // deep purple (header / status bar)
   gradientStart: '#5A2A80',  // header gradient left
   gradientEnd: '#8C2E84',    // header gradient right (magenta)
-  buttonPurple: '#6A2C8F',   // Share / Transactions buttons
+  buttonPurple: '#79288C',   // Share / Transactions buttons (deep Meezan purple)
   primaryLight: '#7A2E8E',
   accentGreen: '#1EA34F',    // "SHOW BALANCE" green text
   yellow: '#F4C400',

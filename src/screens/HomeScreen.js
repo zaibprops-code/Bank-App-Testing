@@ -206,7 +206,7 @@ export default function HomeScreen({ navigation }) {
         {/* Share / Transactions */}
         <View style={styles.actionRow}>
           <TouchableOpacity style={styles.actionBtn} onPress={onShare} activeOpacity={0.85}>
-            <Ionicons name="share-social" size={17} color={colors.white} />
+            <MaterialCommunityIcons name="share-variant" size={18} color={colors.white} />
             <Text style={styles.actionText}>Share</Text>
           </TouchableOpacity>
           <View style={{ width: TILE_GAP }} />
@@ -215,7 +215,7 @@ export default function HomeScreen({ navigation }) {
             onPress={() => navigation.navigate('Transactions')}
             activeOpacity={0.85}
           >
-            <MaterialCommunityIcons name="file-document-outline" size={17} color={colors.white} />
+            <MaterialCommunityIcons name="file-document" size={18} color={colors.white} />
             <Text style={styles.actionText}>Transactions</Text>
           </TouchableOpacity>
         </View>
@@ -299,11 +299,16 @@ const styles = StyleSheet.create({
   actionBtn: {
     flex: 1,
     backgroundColor: colors.buttonPurple,
-    borderRadius: 8,
-    paddingVertical: 14,
+    borderRadius: 12,
+    paddingVertical: 15,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
   actionText: { color: colors.white, fontWeight: '700', marginLeft: 8, fontSize: 15 },
 
