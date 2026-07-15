@@ -9,6 +9,9 @@ on:
     branches: [main]
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   build-apk:
     runs-on: ubuntu-latest
@@ -50,3 +53,14 @@ jobs:
           name: bank-app-testing-apk
           path: bank-app-testing.apk
           if-no-files-found: error
+
+      - name: Publish APK to a GitHub Release (direct download link)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest APK build
+          body: |
+            Debug APK for the Bank App demo.
+            Download **bank-app-testing.apk** below and install it on your Android phone.
+          files: bank-app-testing.apk
+          make_latest: true
