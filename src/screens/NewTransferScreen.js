@@ -19,16 +19,15 @@ import { colors, spacing } from '../theme';
 // Until an official logo file is added, a tinted initials avatar is shown as a
 // placeholder. Drop transparent PNGs into assets/banks/ and set `logo` to wire
 // them in (the trademarked bank logos are not redrawn here).
-const OWN_BANK = { key: 'meezan', name: 'Meezan Bank', initials: 'M', tint: '#00694A' };
+const OWN_BANK = { key: 'meezan', name: 'Meezan Bank', logo: require('../../assets/banks/meezan.png') };
 
 const OTHER_BANKS = [
-  { key: 'jazzcash', name: 'Jazz Cash Wallet', initials: 'JC', tint: '#C8102E' },
-  { key: 'easypaisa', name: 'EasyPaisa-Telenor Bank', initials: 'e', tint: '#3AAA35' },
-  { key: 'hblkonnect', name: 'HBL KONNECT', initials: 'HBL', tint: '#009B77' },
-  { key: 'alhabib', name: 'Bank Al-Habib', initials: 'AH', tint: '#6B8E3D' },
-  { key: 'ubl', name: 'UBL', initials: 'UBL', tint: '#0072BC' },
-  { key: 'alfalah', name: 'Bank Alfalah', initials: 'BA', tint: '#E4002B' },
-  { key: 'allied', name: 'Allied Bank', initials: 'AB', tint: '#1D4E8F' },
+  { key: 'jazzcash', name: 'Jazz Cash Wallet', logo: require('../../assets/banks/jazzcash.png') },
+  { key: 'easypaisa', name: 'EasyPaisa-Telenor Bank', logo: require('../../assets/banks/easypaisa.jpg') },
+  { key: 'hblkonnect', name: 'HBL KONNECT', logo: require('../../assets/banks/hbl.png') },
+  { key: 'ubl', name: 'UBL', logo: require('../../assets/banks/ubl.png') },
+  { key: 'alfalah', name: 'Bank Alfalah', logo: require('../../assets/banks/alfalah.png') },
+  { key: 'allied', name: 'Allied Bank', logo: require('../../assets/banks/allied.png') },
 ];
 
 function BankLogo({ bank }) {
