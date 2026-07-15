@@ -9,6 +9,7 @@ import {
   Share,
   Dimensions,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   MaterialCommunityIcons,
@@ -23,19 +24,21 @@ import { colors, spacing } from '../theme';
 const { width } = Dimensions.get('window');
 const TILE_GAP = 12;
 const TILE_WIDTH = (width - spacing.lg * 2 - TILE_GAP) / 2;
+const ICON = 30;
 
-// Feature tiles, laid out to match the reference screenshot.
+// Feature tiles laid out to match the reference layout.
 const FEATURES = [
-  { key: 'send', label: 'Send Money', icon: (c) => <MaterialCommunityIcons name="cash-multiple" size={24} color={c} /> },
-  { key: 'topup', label: 'Mobile Topup', icon: (c) => <MaterialCommunityIcons name="cellphone" size={24} color={c} /> },
-  { key: 'raast', label: 'Raast Payment', icon: (c) => <MaterialCommunityIcons name="flash" size={24} color={c} /> },
-  { key: 'bills', label: 'Bill Payments', icon: (c) => <Ionicons name="receipt-outline" size={23} color={c} /> },
-  { key: 'card', label: 'Card Management', icon: (c) => <MaterialCommunityIcons name="credit-card-outline" size={24} color={c} /> },
-  { key: 'qr', label: 'QR Payments', icon: (c) => <MaterialCommunityIcons name="qrcode-scan" size={23} color={c} /> },
-  { key: 'zakat', label: 'Zakat & Sadqaat', icon: (c) => <FontAwesome5 name="hand-holding-heart" size={20} color={c} /> },
-  { key: 'funds', label: 'Mutual Funds', icon: (c) => <MaterialCommunityIcons name="chart-bar" size={24} color={c} /> },
-  { key: 'payoneer', label: 'Payoneer', icon: (c) => <MaterialCommunityIcons name="circle-multiple-outline" size={24} color={c} /> },
-  { key: 'feedback', label: 'Feedback', icon: (c) => <MaterialCommunityIcons name="message-reply-text-outline" size={23} color={c} /> },
+  { key: 'send', label: 'Send Money', icon: (c) => <MaterialCommunityIcons name="bank-transfer" size={ICON + 4} color={c} /> },
+  { key: 'topup', label: 'Mobile Topup', icon: (c) => <MaterialCommunityIcons name="cellphone-arrow-down" size={ICON} color={c} /> },
+  { key: 'raast', label: 'Raast Payment', icon: (c) => <MaterialCommunityIcons name="flash" size={ICON} color={c} /> },
+  { key: 'bills', label: 'Bill Payments', icon: (c) => <Ionicons name="receipt-outline" size={ICON - 2} color={c} /> },
+  { key: 'card', label: 'Card Management', icon: (c) => <MaterialCommunityIcons name="credit-card-outline" size={ICON} color={c} /> },
+  { key: 'qr', label: 'QR Payments', icon: (c) => <MaterialCommunityIcons name="qrcode-scan" size={ICON - 2} color={c} /> },
+  { key: 'zakat', label: 'Zakat & Sadqaat', icon: (c) => <FontAwesome5 name="hand-holding-usd" size={ICON - 4} color={c} /> },
+  { key: 'funds', label: 'Mutual Funds', icon: (c) => <MaterialCommunityIcons name="chart-bar" size={ICON} color={c} /> },
+  { key: 'payoneer', label: 'Payoneer', icon: (c) => <MaterialCommunityIcons name="circle-multiple-outline" size={ICON} color={c} /> },
+  { key: 'payorder', label: 'Request Pay Order', icon: (c) => <MaterialCommunityIcons name="file-document-outline" size={ICON} color={c} /> },
+  { key: 'feedback', label: 'Feedback', icon: (c) => <MaterialCommunityIcons name="message-reply-text-outline" size={ICON - 2} color={c} /> },
 ];
 
 export default function HomeScreen({ navigation }) {
@@ -66,28 +69,33 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.root}>
-      {/* Purple status-bar area */}
-      <View style={{ height: insets.top, backgroundColor: colors.primary }} />
-
-      {/* Top app bar: menu • logo + bank name • power */}
-      <View style={styles.appBar}>
-        <TouchableOpacity style={styles.appBarBtn}>
-          <Ionicons name="menu" size={26} color={colors.white} />
-        </TouchableOpacity>
-        <View style={styles.appBarCenter}>
-          <Image source={branding.logo} style={styles.appBarLogo} resizeMode="contain" />
+      {/* Gradient header (status bar + app bar) */}
+      <LinearGradient
+        colors={[colors.gradientStart, colors.gradientEnd]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+      >
+        <View style={{ height: insets.top }} />
+        <View style={styles.appBar}>
+          <TouchableOpacity style={styles.appBarBtn}>
+            <Ionicons name="menu" size={28} color={colors.white} />
+          </TouchableOpacity>
+          <View style={styles.logoCircle}>
+            <Image source={branding.logo} style={styles.appBarLogo} resizeMode="contain" />
+          </View>
           <Text style={styles.appBarTitle} numberOfLines={1}>
             {branding.bankName}
           </Text>
+          <View style={{ flex: 1 }} />
+          <TouchableOpacity style={styles.appBarBtn}>
+            <MaterialIcons name="power-settings-new" size={26} color={colors.white} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.appBarBtn}>
-          <MaterialIcons name="power-settings-new" size={24} color={colors.white} />
-        </TouchableOpacity>
-      </View>
+      </LinearGradient>
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={{ padding: spacing.lg, paddingBottom: spacing.xl }}
+        contentContainerStyle={{ padding: spacing.md, paddingBottom: spacing.xl }}
         showsVerticalScrollIndicator={false}
       >
         {/* Account card */}
@@ -106,14 +114,13 @@ export default function HomeScreen({ navigation }) {
               </Text>
             </View>
             <TouchableOpacity style={styles.refreshBtn}>
-              <Ionicons name="refresh" size={20} color={colors.primary} />
+              <Ionicons name="refresh" size={20} color={colors.textMuted} />
             </TouchableOpacity>
           </View>
 
-          <View style={styles.divider} />
-
+          {/* SHOW BALANCE bordered box */}
           <TouchableOpacity
-            style={styles.showBalanceBtn}
+            style={styles.showBalanceBox}
             onPress={() => setShowBalance((s) => !s)}
             activeOpacity={0.7}
           >
@@ -125,16 +132,17 @@ export default function HomeScreen({ navigation }) {
 
         {/* Share / Transactions */}
         <View style={styles.actionRow}>
-          <TouchableOpacity style={styles.actionBtn} onPress={onShare}>
-            <Ionicons name="share-social" size={16} color={colors.white} />
+          <TouchableOpacity style={styles.actionBtn} onPress={onShare} activeOpacity={0.85}>
+            <Ionicons name="share-social" size={17} color={colors.white} />
             <Text style={styles.actionText}>Share</Text>
           </TouchableOpacity>
           <View style={{ width: TILE_GAP }} />
           <TouchableOpacity
             style={styles.actionBtn}
             onPress={() => navigation.navigate('Transactions')}
+            activeOpacity={0.85}
           >
-            <MaterialCommunityIcons name="file-document-outline" size={16} color={colors.white} />
+            <MaterialCommunityIcons name="file-document-outline" size={17} color={colors.white} />
             <Text style={styles.actionText}>Transactions</Text>
           </TouchableOpacity>
         </View>
@@ -149,7 +157,7 @@ export default function HomeScreen({ navigation }) {
               onPress={() => onTilePress(item)}
             >
               <View style={styles.tileIcon}>{item.icon(colors.primary)}</View>
-              <Text style={styles.tileLabel}>{item.label}</Text>
+              <Text style={styles.tileLabel} numberOfLines={2}>{item.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -163,21 +171,30 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
 
   appBar: {
-    backgroundColor: colors.primary,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: spacing.md,
-    height: 52,
+    height: 56,
   },
-  appBarBtn: { padding: 6 },
-  appBarCenter: { flex: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.sm },
-  appBarLogo: { width: 30, height: 30, borderRadius: 15, marginRight: spacing.sm },
-  appBarTitle: { color: colors.white, fontSize: 18, fontWeight: '700' },
+  appBarBtn: { padding: 4 },
+  logoCircle: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: spacing.sm,
+    marginRight: spacing.sm,
+  },
+  appBarLogo: { width: 34, height: 34, borderRadius: 17 },
+  appBarTitle: { color: colors.white, fontSize: 19, fontWeight: '700' },
 
   card: {
     backgroundColor: colors.cardBg,
     borderRadius: 10,
     padding: spacing.lg,
+    marginTop: spacing.xs,
     elevation: 2,
     shadowColor: '#000',
     shadowOpacity: 0.08,
@@ -185,43 +202,51 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
   },
   cardHeaderRow: { flexDirection: 'row', alignItems: 'flex-start' },
-  name: { fontSize: 15, fontWeight: '800', color: colors.textDark, marginBottom: 4 },
-  detailLine: { fontSize: 12.5, color: colors.textMuted, marginTop: 2 },
+  name: { fontSize: 15, fontWeight: '800', color: colors.textDark, marginBottom: 5 },
+  detailLine: { fontSize: 12.5, color: colors.textMuted, marginTop: 3 },
   detailValue: { color: colors.textDark, fontWeight: '600' },
   refreshBtn: { padding: 4 },
-  divider: { height: 1, backgroundColor: '#EEE', marginVertical: spacing.md },
-  showBalanceBtn: { alignItems: 'center', paddingVertical: spacing.sm },
+  showBalanceBox: {
+    marginTop: spacing.lg,
+    borderWidth: 1,
+    borderColor: '#E4E4E8',
+    borderRadius: 8,
+    paddingVertical: 16,
+    alignItems: 'center',
+    backgroundColor: '#FCFCFD',
+  },
   showBalanceText: {
     color: colors.accentGreen,
     fontWeight: '800',
-    fontSize: 18,
+    fontSize: 20,
     letterSpacing: 0.5,
   },
 
-  actionRow: { flexDirection: 'row', marginTop: spacing.lg },
+  actionRow: { flexDirection: 'row', marginTop: spacing.md },
   actionBtn: {
     flex: 1,
-    backgroundColor: colors.primaryLight,
+    backgroundColor: colors.buttonPurple,
     borderRadius: 8,
-    paddingVertical: 12,
+    paddingVertical: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  actionText: { color: colors.white, fontWeight: '700', marginLeft: 8, fontSize: 14 },
+  actionText: { color: colors.white, fontWeight: '700', marginLeft: 8, fontSize: 15 },
 
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginTop: spacing.lg,
+    marginTop: spacing.md,
   },
   tile: {
     width: TILE_WIDTH,
+    minHeight: 88,
     backgroundColor: colors.cardBg,
     borderRadius: 10,
     paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: spacing.lg,
     marginBottom: TILE_GAP,
     flexDirection: 'row',
     alignItems: 'center',
@@ -229,10 +254,10 @@ const styles = StyleSheet.create({
     borderColor: colors.tileBorder,
     elevation: 1,
     shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
-  tileIcon: { width: 34, alignItems: 'center', marginRight: spacing.sm },
-  tileLabel: { flex: 1, fontSize: 13, fontWeight: '600', color: colors.textDark },
+  tileIcon: { width: 44, alignItems: 'center', marginRight: spacing.sm },
+  tileLabel: { flex: 1, fontSize: 14.5, fontWeight: '600', color: colors.textDark, lineHeight: 19 },
 });

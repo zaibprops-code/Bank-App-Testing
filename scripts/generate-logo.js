@@ -7,23 +7,16 @@ const OUT = path.join(__dirname, '..', 'assets', 'logo.png');
 
 const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#6D2E8F"/>
-      <stop offset="1" stop-color="#4A1E6E"/>
-    </linearGradient>
-  </defs>
-  <circle cx="256" cy="256" r="248" fill="url(#g)"/>
-  <circle cx="256" cy="256" r="248" fill="none" stroke="#FFFFFF" stroke-width="10" opacity="0.5"/>
-  <g fill="#FFFFFF">
-    <polygon points="256,120 140,205 372,205"/>
-    <rect x="142" y="205" width="228" height="26" rx="5"/>
-    <rect x="165" y="240" width="30" height="120" rx="5"/>
-    <rect x="225" y="240" width="30" height="120" rx="5"/>
-    <rect x="285" y="240" width="30" height="120" rx="5"/>
-    <rect x="345" y="240" width="0" height="120" rx="5"/>
-    <rect x="150" y="366" width="212" height="26" rx="6"/>
-    <rect x="132" y="398" width="248" height="22" rx="8"/>
+  <circle cx="256" cy="256" r="248" fill="#FFFFFF"/>
+  <circle cx="256" cy="256" r="248" fill="none" stroke="#5E2A7E" stroke-width="14"/>
+  <g fill="#5E2A7E">
+    <polygon points="256,128 148,208 364,208"/>
+    <rect x="150" y="208" width="212" height="24" rx="5"/>
+    <rect x="172" y="242" width="28" height="112" rx="5"/>
+    <rect x="242" y="242" width="28" height="112" rx="5"/>
+    <rect x="312" y="242" width="28" height="112" rx="5"/>
+    <rect x="158" y="360" width="196" height="24" rx="6"/>
+    <rect x="140" y="392" width="232" height="20" rx="8"/>
   </g>
 </svg>`;
 

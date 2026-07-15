@@ -1,15 +1,18 @@
-// Central color + spacing tokens so the whole app matches the screenshot look.
+// Central color + spacing tokens tuned to match the reference layout.
 export const colors = {
-  primary: '#5A2D82',        // deep Meezan-style purple (header)
-  primaryDark: '#4A1E6E',
-  primaryLight: '#6D2E8F',
-  accentGreen: '#2E9E5B',    // "SHOW BALANCE" green text
+  primary: '#5E2A7E',        // deep purple (header / status bar)
+  gradientStart: '#5A2A80',  // header gradient left
+  gradientEnd: '#8C2E84',    // header gradient right (magenta)
+  buttonPurple: '#6A2C8F',   // Share / Transactions buttons
+  primaryLight: '#7A2E8E',
+  accentGreen: '#1EA34F',    // "SHOW BALANCE" green text
   yellow: '#F4C400',
-  screenBg: '#ECEDEF',       // light grey page background behind tiles
+  screenBg: '#FFFFFF',       // white page background
   cardBg: '#FFFFFF',
-  textDark: '#1F2430',
+  textDark: '#2A2A2E',
   textMuted: '#8A8F9A',
-  tileBorder: '#EFEFF2',
+  tileBorder: '#ECECF0',
+  divider: '#EDEDF0',
   danger: '#D64545',
   white: '#FFFFFF',
 };
