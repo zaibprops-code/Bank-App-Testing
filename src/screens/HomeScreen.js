@@ -180,43 +180,45 @@ export default function HomeScreen({ navigation }) {
         contentContainerStyle={{ padding: spacing.md, paddingBottom: spacing.xl }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Account card */}
+        {/* Account panel: purple gradient frame around a pure-white card */}
         <LinearGradient
-          colors={['#F7F1FB', '#ECE0F4']}
+          colors={['#7C3F96', '#B98ACB']}
           start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={styles.card}
+          end={{ x: 1, y: 1 }}
+          style={styles.panel}
         >
-          <View style={styles.cardHeaderRow}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.name} numberOfLines={1}>{accountTitle}</Text>
-              <Text style={styles.detailLine}>
-                {accountLabel}: <Text style={styles.detailValue}>{accountNumber}</Text>
-              </Text>
-              <Text style={styles.detailLine}>
-                IBAN: <Text style={styles.detailValue}>{iban}</Text>
-              </Text>
-              <Text style={styles.detailLine}>
-                Branch: <Text style={styles.detailValue}>{branch}</Text>
-              </Text>
+          <View style={styles.card}>
+            <View style={styles.cardHeaderRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.name} numberOfLines={1}>{accountTitle}</Text>
+                <Text style={styles.detailLine}>
+                  {accountLabel}: <Text style={styles.detailValue}>{accountNumber}</Text>
+                </Text>
+                <Text style={styles.detailLine}>
+                  IBAN: <Text style={styles.detailValue}>{iban}</Text>
+                </Text>
+                <Text style={styles.detailLine}>
+                  Branch: <Text style={styles.detailValue}>{branch}</Text>
+                </Text>
+              </View>
+              <TouchableOpacity style={styles.refreshBtn}>
+                <Ionicons name="refresh" size={20} color={colors.textMuted} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.refreshBtn}>
-              <Ionicons name="refresh" size={20} color={colors.textMuted} />
+
+            {/* SHOW BALANCE */}
+            <TouchableOpacity
+              style={styles.showBalanceBox}
+              onPress={() => setShowBalance((s) => !s)}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.showBalanceText}>
+                {showBalance ? formatMoney(balance) : 'SHOW BALANCE'}
+              </Text>
             </TouchableOpacity>
           </View>
 
-          {/* SHOW BALANCE bordered box */}
-          <TouchableOpacity
-            style={styles.showBalanceBox}
-            onPress={() => setShowBalance((s) => !s)}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.showBalanceText}>
-              {showBalance ? formatMoney(balance) : 'SHOW BALANCE'}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Share / Transactions (inside the account card) */}
+          {/* Share / Transactions on the gradient */}
           <View style={styles.actionRow}>
             <TouchableOpacity style={styles.actionBtn} onPress={onShare} activeOpacity={0.85}>
               <MaterialCommunityIcons name="share-variant" size={18} color={colors.white} />
@@ -283,14 +285,23 @@ const styles = StyleSheet.create({
   appBarLogo: { width: 34, height: 34, borderRadius: 17 },
   appBarTitle: { color: colors.white, fontSize: 19, fontWeight: '700' },
 
+  panel: {
+    borderRadius: 16,
+    padding: spacing.md,
+    marginTop: spacing.xs,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+  },
   card: {
+    backgroundColor: colors.cardBg,
     borderRadius: 10,
     padding: spacing.lg,
-    marginTop: spacing.xs,
-    overflow: 'hidden',
     elevation: 2,
     shadowColor: '#000',
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.1,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
   },
