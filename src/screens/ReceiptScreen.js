@@ -79,12 +79,19 @@ export default function ReceiptScreen({ navigation, route }) {
   const amountStr = formatAmount(txn.amount);
   const dateStr = formatDateTime(txn.date);
 
+  // Bank-style System Trace Audit Number (6 digits) derived from the unique
+  // reference so it stays stable for this transaction.
+  const stan = String(txn.reference || '').replace(/\D/g, '').slice(-6).padStart(6, '0');
+  const txnType = '1LINK IBFT';
+
   const receiptText =
     `${brand} — Transaction Successful\n` +
     `Amount: ${amountStr}\n` +
     `Date: ${dateStr}\n` +
     `From: ${acct.accountTitle} (${maskAccount(acct.accountNumber)})\n` +
     `To: ${toName}${toAccount ? ` (${toAccount})` : ''}\n` +
+    `Reference Number (STAN): ${stan}\n` +
+    `Transaction Type: ${txnType}\n` +
     `Transaction ID: ${txn.id}\n` +
     `Reference: ${txn.reference}`;
 
@@ -107,9 +114,9 @@ export default function ReceiptScreen({ navigation, route }) {
       });
       await AsyncStorage.setItem(BEN_KEY, JSON.stringify(list));
       setAdded(true);
-      Alert.alert('Beneficiary added', `${toName} has been added to your beneficiaries.`);
+      Alert.alert('Favorite Payee added', `${toName} has been added to your favorite payees.`);
     } catch (e) {
-      Alert.alert('Error', 'Could not add beneficiary. Please try again.');
+      Alert.alert('Error', 'Could not add favorite payee. Please try again.');
     }
   };
 
@@ -183,7 +190,23 @@ export default function ReceiptScreen({ navigation, route }) {
             fallbackInitial={(toName || 'B').charAt(0)}
           />
 
+          <View style={styles.divider} />
+
+          {/* Reference / transaction meta */}
+          <View style={styles.metaRow}>
+            <Text style={styles.metaLabel}>Reference Number (STAN): </Text>
+            <Text style={styles.metaValue}>{stan}</Text>
+          </View>
+          <View style={styles.metaRow}>
+            <Text style={styles.metaLabel}>Transaction Type: </Text>
+            <Text style={styles.metaValue}>{txnType}</Text>
+          </View>
+
           <View style={styles.actionsRow}>
+            <TouchableOpacity style={styles.action} onPress={onAddBeneficiary} activeOpacity={0.7}>
+              <Ionicons name={added ? 'star' : 'star-outline'} size={22} color={added ? colors.yellow : colors.primary} />
+              <Text style={styles.actionText}>Favorite Payee</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.action} onPress={shareReceipt} activeOpacity={0.7}>
               <Ionicons name="share-social-outline" size={22} color={colors.primary} />
               <Text style={styles.actionText}>Share Receipt</Text>
@@ -194,10 +217,6 @@ export default function ReceiptScreen({ navigation, route }) {
             </TouchableOpacity>
           </View>
         </View>
-
-        <TouchableOpacity style={styles.benBtn} onPress={onAddBeneficiary} activeOpacity={0.8}>
-          <Text style={styles.benText}>{added ? 'Added To Beneficiary' : 'Add To Beneficiary'}</Text>
-        </TouchableOpacity>
 
         <TouchableOpacity style={styles.payBtn} onPress={makeAnotherPayment} activeOpacity={0.85}>
           <Text style={styles.payText}>Make Another Payment</Text>
@@ -278,28 +297,18 @@ const styles = StyleSheet.create({
   partyName: { fontSize: 15.5, fontWeight: '800', color: colors.textDark },
   partyAccount: { fontSize: 13, color: colors.textMuted, marginTop: 1 },
 
+  metaRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', marginBottom: 4 },
+  metaLabel: { fontSize: 13, color: colors.textMuted },
+  metaValue: { fontSize: 13, color: colors.textDark, fontWeight: '700' },
+
   actionsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginTop: spacing.xl,
     paddingTop: spacing.md,
   },
-  action: { alignItems: 'center', paddingHorizontal: spacing.lg },
-  actionText: { color: colors.primary, fontSize: 12.5, fontWeight: '600', marginTop: 6 },
-
-  benBtn: {
-    backgroundColor: colors.white,
-    borderRadius: 10,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: spacing.lg,
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  benText: { color: colors.primary, fontWeight: '800', fontSize: 15 },
+  action: { flex: 1, alignItems: 'center', paddingHorizontal: spacing.xs },
+  actionText: { color: colors.primary, fontSize: 12.5, fontWeight: '600', marginTop: 6, textAlign: 'center' },
 
   payBtn: {
     backgroundColor: colors.buttonPurple,
