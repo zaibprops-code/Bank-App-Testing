@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Bank App Testing",
+    "slug": "bank-app-testing",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "bankapp",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#5A2D82"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.bankapptesting"
+    },
+    "android": {
+      "package": "com.example.bankapptesting"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
