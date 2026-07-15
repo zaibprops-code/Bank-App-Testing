@@ -12,6 +12,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: build-apk
+  cancel-in-progress: true
+
 jobs:
   build-apk:
     runs-on: ubuntu-latest
@@ -39,6 +43,13 @@ jobs:
 
       - name: Generate native Android project (expo prebuild)
         run: npx expo prebuild --platform android --no-install
+
+      - name: Raise Gradle memory (prevents "Java heap space" OOM)
+        run: |
+          echo "" >> android/gradle.properties
+          echo "org.gradle.jvmargs=-Xmx6144m -XX:MaxMetaspaceSize=1536m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" >> android/gradle.properties
+          echo "org.gradle.workers.max=2" >> android/gradle.properties
+          echo "android.enableJetifier=false" >> android/gradle.properties
 
       - name: Build debug APK
         working-directory: android
