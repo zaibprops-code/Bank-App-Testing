@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { account as accountConfig } from '../config/branding';
 
 const AccountContext = createContext(null);
 
-const STORAGE_KEY = '@bankapp_state_v1';
+const STORAGE_KEY = '@bankapp_state_v2';
 
 // ---- Logic helpers -------------------------------------------------------
 
@@ -35,11 +36,14 @@ export function formatMoney(amount) {
 }
 
 // The default / seed state used the first time the app runs.
+// Identity/account details come from src/config/branding.js
 const initialState = {
-  accountTitle: 'UZAIR WAHID',
-  accountNumber: '0102 0105 1234 5678',
-  iban: 'PK36 MEZN 0001 0201 0512 3456',
-  balance: 125430.75,
+  accountTitle: accountConfig.title,
+  accountLabel: accountConfig.accountLabel,
+  accountNumber: accountConfig.accountNumber,
+  iban: accountConfig.iban,
+  branch: accountConfig.branch,
+  balance: accountConfig.openingBalance,
   transactions: [
     {
       id: 'TXN-20260714-SEED0001',
