@@ -230,7 +230,7 @@ export default function HomeScreen({ navigation }) {
               onPress={() => onTilePress(item)}
             >
               <View style={styles.tileIcon}>{item.icon(colors.primary)}</View>
-              <Text style={styles.tileLabel} numberOfLines={2}>{item.label}</Text>
+              <Text style={styles.tileLabel} numberOfLines={3}>{item.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -315,10 +315,10 @@ const styles = StyleSheet.create({
   },
   tile: {
     width: TILE_WIDTH,
-    minHeight: 88,
+    minHeight: 96,
     backgroundColor: colors.cardBg,
     borderRadius: 10,
-    paddingVertical: spacing.lg,
+    paddingVertical: 18,
     paddingHorizontal: spacing.lg,
     marginBottom: TILE_GAP,
     flexDirection: 'row',
@@ -332,5 +332,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
   },
   tileIcon: { width: 44, alignItems: 'center', marginRight: spacing.sm },
-  tileLabel: { flex: 1, fontSize: 14.5, fontWeight: '600', color: colors.textDark, lineHeight: 19 },
+  tileLabel: { flex: 1, fontSize: 15.5, fontWeight: '600', color: colors.textDark, lineHeight: 20 },
 });
