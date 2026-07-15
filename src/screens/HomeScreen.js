@@ -51,7 +51,17 @@ const FEATURES = [
     ),
   },
   { key: 'raast', label: 'Raast Payment', icon: (c) => <MaterialCommunityIcons name="flash" size={ICON} color={c} /> },
-  { key: 'bills', label: 'Bill Payments', icon: (c) => <Ionicons name="receipt-outline" size={ICON - 2} color={c} /> },
+  {
+    key: 'bills',
+    label: 'Bill Payments',
+    // Bill/voucher (bookmark) with the "Rs" currency mark.
+    icon: (c) => (
+      <View style={{ width: ICON, height: ICON, alignItems: 'center', justifyContent: 'center' }}>
+        <MaterialCommunityIcons name="bookmark-outline" size={ICON} color={c} />
+        <Text style={{ position: 'absolute', top: ICON * 0.2, fontSize: 9, fontWeight: '800', color: c }}>Rs</Text>
+      </View>
+    ),
+  },
   { key: 'card', label: 'Card Management', icon: (c) => <MaterialCommunityIcons name="credit-card-outline" size={ICON} color={c} /> },
   { key: 'qr', label: 'QR Payments', icon: (c) => <MaterialCommunityIcons name="qrcode-scan" size={ICON - 2} color={c} /> },
   { key: 'zakat', label: 'Zakat & Sadqaat', icon: (c) => <FontAwesome5 name="hand-holding-usd" size={ICON - 4} color={c} /> },
