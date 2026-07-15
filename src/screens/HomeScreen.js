@@ -136,7 +136,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   const onTilePress = (item) => {
-    if (item.key === 'send') navigation.navigate('SendMoney');
+    if (item.key === 'send') navigation.navigate('NewTransfer');
     else navigation.navigate('SendMoney', { presetTitle: item.label });
   };
 

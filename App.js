@@ -8,6 +8,7 @@ import { AccountProvider } from './src/context/AccountContext';
 import HomeScreen from './src/screens/HomeScreen';
 import TransactionsScreen from './src/screens/TransactionsScreen';
 import SendMoneyScreen from './src/screens/SendMoneyScreen';
+import NewTransferScreen from './src/screens/NewTransferScreen';
 import ReceiptScreen from './src/screens/ReceiptScreen';
 import { colors } from './src/theme';
 
@@ -35,6 +36,11 @@ export default function App() {
               name="Transactions"
               component={TransactionsScreen}
               options={{ title: 'Transactions' }}
+            />
+            <Stack.Screen
+              name="NewTransfer"
+              component={NewTransferScreen}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="SendMoney"
