@@ -210,23 +210,23 @@ export default function HomeScreen({ navigation }) {
               {showBalance ? formatMoney(balance) : 'SHOW BALANCE'}
             </Text>
           </TouchableOpacity>
-        </View>
 
-        {/* Share / Transactions */}
-        <View style={styles.actionRow}>
-          <TouchableOpacity style={styles.actionBtn} onPress={onShare} activeOpacity={0.85}>
-            <MaterialCommunityIcons name="share-variant" size={18} color={colors.white} />
-            <Text style={styles.actionText}>Share</Text>
-          </TouchableOpacity>
-          <View style={{ width: TILE_GAP }} />
-          <TouchableOpacity
-            style={styles.actionBtn}
-            onPress={() => navigation.navigate('Transactions')}
-            activeOpacity={0.85}
-          >
-            <MaterialCommunityIcons name="file-document" size={18} color={colors.white} />
-            <Text style={styles.actionText}>Transactions</Text>
-          </TouchableOpacity>
+          {/* Share / Transactions (inside the account card) */}
+          <View style={styles.actionRow}>
+            <TouchableOpacity style={styles.actionBtn} onPress={onShare} activeOpacity={0.85}>
+              <MaterialCommunityIcons name="share-variant" size={18} color={colors.white} />
+              <Text style={styles.actionText}>Share</Text>
+            </TouchableOpacity>
+            <View style={{ width: TILE_GAP }} />
+            <TouchableOpacity
+              style={styles.actionBtn}
+              onPress={() => navigation.navigate('Transactions')}
+              activeOpacity={0.85}
+            >
+              <MaterialCommunityIcons name="file-document" size={18} color={colors.white} />
+              <Text style={styles.actionText}>Transactions</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Feature tiles */}
