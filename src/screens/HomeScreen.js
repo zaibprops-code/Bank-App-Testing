@@ -36,7 +36,7 @@ const FEATURES = [
   { key: 'qr', label: 'QR Payments', icon: (c) => <MaterialCommunityIcons name="qrcode-scan" size={ICON - 2} color={c} /> },
   { key: 'zakat', label: 'Zakat & Sadqaat', icon: (c) => <FontAwesome5 name="hand-holding-usd" size={ICON - 4} color={c} /> },
   { key: 'funds', label: 'Mutual Funds', icon: (c) => <MaterialCommunityIcons name="chart-bar" size={ICON} color={c} /> },
-  { key: 'payoneer', label: 'Payoneer', icon: (c) => <MaterialCommunityIcons name="circle-multiple-outline" size={ICON} color={c} /> },
+  { key: 'payoneer', label: 'Payoneer', icon: () => <Image source={require('../../assets/payoneer.png')} style={{ width: ICON + 4, height: ICON + 4 }} resizeMode="contain" /> },
   { key: 'payorder', label: 'Request Pay Order', icon: (c) => <MaterialCommunityIcons name="file-document-outline" size={ICON} color={c} /> },
   { key: 'feedback', label: 'Feedback', icon: (c) => <MaterialCommunityIcons name="message-reply-text-outline" size={ICON - 2} color={c} /> },
 ];
