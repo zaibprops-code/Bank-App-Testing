@@ -36,7 +36,7 @@ export default function AmountScreen({ navigation, route }) {
         amount,
         title: `Transfer to ${bank.name || 'Bank'}`,
       });
-      navigation.replace('Receipt', { txn });
+      navigation.replace('Receipt', { txn, bank, accountNumber, accountTitle, purpose });
     } catch (e) {
       Alert.alert('Transaction failed', e.message);
     }
