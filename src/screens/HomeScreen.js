@@ -338,10 +338,10 @@ const styles = StyleSheet.create({
   },
   tile: {
     width: TILE_WIDTH,
-    minHeight: 96,
+    minHeight: 68,
     backgroundColor: colors.cardBg,
     borderRadius: 10,
-    paddingVertical: 18,
+    paddingVertical: 12,
     paddingHorizontal: spacing.lg,
     marginBottom: TILE_GAP,
     flexDirection: 'row',
