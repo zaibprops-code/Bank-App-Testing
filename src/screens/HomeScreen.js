@@ -50,7 +50,7 @@ const FEATURES = [
       </View>
     ),
   },
-  { key: 'raast', label: 'Raast Payment', icon: (c) => <MaterialCommunityIcons name="flash" size={ICON} color={c} /> },
+  { key: 'raast', label: 'Raast Payment', icon: () => <Image source={require('../../assets/raast.png')} style={{ width: ICON + 12, height: ICON + 12 }} resizeMode="contain" /> },
   {
     key: 'bills',
     label: 'Bill Payments',
