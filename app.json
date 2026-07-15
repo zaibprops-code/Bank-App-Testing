@@ -13,9 +13,22 @@
       "backgroundColor": "#5A2D82"
     },
     "assetBundlePatterns": ["**/*"],
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to save transaction receipts to your gallery.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save transaction receipts to your gallery.",
+          "isAccessMediaLocationEnabled": false
+        }
+      ]
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.example.bankapptesting"
+      "bundleIdentifier": "com.example.bankapptesting",
+      "infoPlist": {
+        "NSPhotoLibraryAddUsageDescription": "Allow Bank App to save transaction receipts to your gallery."
+      }
     },
     "android": {
       "package": "com.example.bankapptesting",

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { captureRef } from 'react-native-view-shot';
+import * as Sharing from 'expo-sharing';
+import * as MediaLibrary from 'expo-media-library';
 import { useAccount } from '../context/AccountContext';
 import { branding } from '../config/branding';
 import { colors, spacing } from '../theme';
@@ -67,11 +70,82 @@ function Party({ label, name, account, logo, fallbackInitial }) {
   );
 }
 
+// The printed receipt body — everything the receipt shows apart from the
+// interactive action buttons. Shared by the on-screen card and the off-screen
+// capture view that becomes the shareable/save-able image, so the two can
+// never drift apart.
+function ReceiptDetails({
+  brand,
+  amountStr,
+  dateStr,
+  fromName,
+  fromAccount,
+  fromLogo,
+  toName,
+  toAccount,
+  toLogo,
+  stan,
+  txnType,
+}) {
+  return (
+    <>
+      <Text style={styles.successTitle}>Transaction Successful</Text>
+
+      {/* Amount with faint brand watermark */}
+      <View style={styles.amountBox}>
+        <View style={styles.watermark} pointerEvents="none">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Text key={i} style={styles.watermarkText} numberOfLines={1}>
+              {`${brand}   ${brand}   ${brand}   ${brand}`}
+            </Text>
+          ))}
+        </View>
+        <Text style={styles.amountText}>{amountStr}</Text>
+      </View>
+
+      <Text style={styles.dateText}>{dateStr}</Text>
+
+      <View style={styles.divider} />
+
+      <Party
+        label="From Account:"
+        name={fromName}
+        account={fromAccount}
+        logo={fromLogo}
+        fallbackInitial={(fromName || 'A').charAt(0)}
+      />
+
+      <View style={{ height: spacing.md }} />
+
+      <Party
+        label="To Account:"
+        name={toName}
+        account={toAccount}
+        logo={toLogo}
+        fallbackInitial={(toName || 'B').charAt(0)}
+      />
+
+      <View style={styles.divider} />
+
+      {/* Reference / transaction meta */}
+      <View style={styles.metaRow}>
+        <Text style={styles.metaLabel}>Reference Number (STAN): </Text>
+        <Text style={styles.metaValue}>{stan}</Text>
+      </View>
+      <View style={styles.metaRow}>
+        <Text style={styles.metaLabel}>Transaction Type: </Text>
+        <Text style={styles.metaValue}>{txnType}</Text>
+      </View>
+    </>
+  );
+}
+
 export default function ReceiptScreen({ navigation, route }) {
   const insets = useSafeAreaInsets();
   const { txn, bank, accountNumber, accountTitle } = route.params || {};
   const acct = useAccount();
   const [added, setAdded] = useState(false);
+  const shotRef = useRef(null);
 
   const brand = branding.bankName || 'Bank';
   const toName = accountTitle || txn.counterparty;
@@ -95,10 +169,48 @@ export default function ReceiptScreen({ navigation, route }) {
     `Transaction ID: ${txn.id}\n` +
     `Reference: ${txn.reference}`;
 
+  // Render the off-screen receipt view to a PNG file and return its uri.
+  const captureReceipt = () =>
+    captureRef(shotRef, { format: 'png', quality: 1, result: 'tmpfile' });
+
+  // Share the receipt as an image so it can be sent as a proper picture on
+  // WhatsApp, etc. Falls back to plain text if image sharing is unavailable.
   const shareReceipt = async () => {
+    try {
+      const uri = await captureReceipt();
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(uri, {
+          mimeType: 'image/png',
+          dialogTitle: 'Share Receipt',
+          UTI: 'public.png',
+        });
+        return;
+      }
+    } catch (e) {
+      // fall through to the text fallback below
+    }
     try {
       await Share.share({ message: receiptText });
     } catch (e) {}
+  };
+
+  // Save the receipt image to the phone's gallery.
+  const saveReceipt = async () => {
+    try {
+      const uri = await captureReceipt();
+      const perm = await MediaLibrary.requestPermissionsAsync();
+      if (!perm.granted) {
+        Alert.alert(
+          'Permission needed',
+          'Please allow photo access to save the receipt to your gallery.'
+        );
+        return;
+      }
+      await MediaLibrary.saveToLibraryAsync(uri);
+      Alert.alert('Receipt saved', 'The receipt image has been saved to your gallery.');
+    } catch (e) {
+      Alert.alert('Error', 'Could not save the receipt. Please try again.');
+    }
   };
 
   const onAddBeneficiary = async () => {
@@ -154,53 +266,19 @@ export default function ReceiptScreen({ navigation, route }) {
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.successTitle}>Transaction Successful</Text>
-
-          {/* Amount with faint brand watermark */}
-          <View style={styles.amountBox}>
-            <View style={styles.watermark} pointerEvents="none">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Text key={i} style={styles.watermarkText} numberOfLines={1}>
-                  {`${brand}   ${brand}   ${brand}   ${brand}`}
-                </Text>
-              ))}
-            </View>
-            <Text style={styles.amountText}>{amountStr}</Text>
-          </View>
-
-          <Text style={styles.dateText}>{dateStr}</Text>
-
-          <View style={styles.divider} />
-
-          <Party
-            label="From Account"
-            name={acct.accountTitle}
-            account={maskAccount(acct.accountNumber)}
-            logo={branding.logo}
-            fallbackInitial={(acct.accountTitle || 'A').charAt(0)}
+          <ReceiptDetails
+            brand={brand}
+            amountStr={amountStr}
+            dateStr={dateStr}
+            fromName={acct.accountTitle}
+            fromAccount={maskAccount(acct.accountNumber)}
+            fromLogo={branding.logo}
+            toName={toName}
+            toAccount={toAccount}
+            toLogo={bank?.logo}
+            stan={stan}
+            txnType={txnType}
           />
-
-          <View style={{ height: spacing.md }} />
-
-          <Party
-            label="To Account:"
-            name={toName}
-            account={toAccount}
-            logo={bank?.logo}
-            fallbackInitial={(toName || 'B').charAt(0)}
-          />
-
-          <View style={styles.divider} />
-
-          {/* Reference / transaction meta */}
-          <View style={styles.metaRow}>
-            <Text style={styles.metaLabel}>Reference Number (STAN): </Text>
-            <Text style={styles.metaValue}>{stan}</Text>
-          </View>
-          <View style={styles.metaRow}>
-            <Text style={styles.metaLabel}>Transaction Type: </Text>
-            <Text style={styles.metaValue}>{txnType}</Text>
-          </View>
 
           <View style={styles.actionsRow}>
             <TouchableOpacity style={styles.action} onPress={onAddBeneficiary} activeOpacity={0.7}>
@@ -211,7 +289,7 @@ export default function ReceiptScreen({ navigation, route }) {
               <Ionicons name="share-social-outline" size={22} color={colors.primary} />
               <Text style={styles.actionText}>Share Receipt</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.action} onPress={shareReceipt} activeOpacity={0.7}>
+            <TouchableOpacity style={styles.action} onPress={saveReceipt} activeOpacity={0.7}>
               <Ionicons name="download-outline" size={22} color={colors.primary} />
               <Text style={styles.actionText}>Save Receipt</Text>
             </TouchableOpacity>
@@ -222,6 +300,34 @@ export default function ReceiptScreen({ navigation, route }) {
           <Text style={styles.payText}>Make Another Payment</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* Off-screen clean receipt rendered to an image for Share / Save.
+          Kept out of the visible flow so the shared picture never includes the
+          action buttons or the "Make Another Payment" bar. */}
+      <View style={styles.captureOffscreen} pointerEvents="none">
+        <View ref={shotRef} collapsable={false} style={styles.captureCard}>
+          <View style={styles.captureCheckWrap}>
+            <View style={styles.successCircle}>
+              <Ionicons name="checkmark" size={40} color={colors.white} />
+            </View>
+          </View>
+          <View style={styles.card}>
+            <ReceiptDetails
+              brand={brand}
+              amountStr={amountStr}
+              dateStr={dateStr}
+              fromName={acct.accountTitle}
+              fromAccount={maskAccount(acct.accountNumber)}
+              fromLogo={branding.logo}
+              toName={toName}
+              toAccount={toAccount}
+              toLogo={bank?.logo}
+              stan={stan}
+              txnType={txnType}
+            />
+          </View>
+        </View>
+      </View>
     </View>
   );
 }
@@ -233,6 +339,18 @@ const styles = StyleSheet.create({
   hBtn: { padding: 6 },
 
   body: { padding: spacing.lg, paddingTop: spacing.xl },
+
+  // Off-screen container for the image capture: laid out (so it renders) but
+  // pushed far off the visible area.
+  captureOffscreen: { position: 'absolute', left: -10000, top: 0 },
+  captureCard: {
+    width: 380,
+    backgroundColor: colors.screenBg,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl + 36,
+    paddingBottom: spacing.lg,
+  },
+  captureCheckWrap: { alignItems: 'center', marginBottom: -36, zIndex: 2 },
 
   checkWrap: { alignItems: 'center', marginBottom: -36, zIndex: 2 },
   successCircle: {
