@@ -1,12 +1,14 @@
 {
   "expo": {
-    "name": "Bank App Testing",
+    "name": "Bank App",
     "slug": "bank-app-testing",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "scheme": "bankapp",
+    "icon": "./assets/icon.png",
     "splash": {
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#5A2D82"
     },
@@ -16,10 +18,15 @@
       "bundleIdentifier": "com.example.bankapptesting"
     },
     "android": {
-      "package": "com.example.bankapptesting"
+      "package": "com.example.bankapptesting",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#5A2D82"
+      }
     },
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
     }
   }
 }
