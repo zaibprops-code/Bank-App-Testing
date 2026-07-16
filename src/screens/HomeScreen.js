@@ -24,6 +24,9 @@ import { colors, spacing } from '../theme';
 import SideMenu from '../components/SideMenu';
 
 const { width } = Dimensions.get('window');
+// Light lavender page background so the purple header blends smoothly into
+// the area beneath the account card.
+const PAGE_BG = '#F3E9F2';
 const TILE_GAP = 12;
 const TILE_WIDTH = (width - spacing.lg * 2 - TILE_GAP) / 2;
 const ICON = 30;
@@ -175,6 +178,15 @@ export default function HomeScreen({ navigation }) {
         </View>
       </LinearGradient>
 
+      {/* Content background: carries the header purple down and dissolves it
+          into the light lavender page colour beneath the account card. */}
+      <LinearGradient
+        colors={['#7C2D86', PAGE_BG, PAGE_BG]}
+        locations={[0, 0.3, 1]}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={styles.contentBg}
+      >
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={{ padding: spacing.md, paddingBottom: spacing.xl }}
@@ -251,6 +263,7 @@ export default function HomeScreen({ navigation }) {
           ))}
         </View>
       </ScrollView>
+      </LinearGradient>
 
       <SideMenu
         visible={menuOpen}
@@ -262,8 +275,9 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.screenBg },
-  scroll: { flex: 1 },
+  root: { flex: 1, backgroundColor: PAGE_BG },
+  contentBg: { flex: 1 },
+  scroll: { flex: 1, backgroundColor: 'transparent' },
 
   appBar: {
     flexDirection: 'row',
