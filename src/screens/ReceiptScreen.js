@@ -108,23 +108,27 @@ function ReceiptDetails({
 
       <View style={styles.divider} />
 
-      <Party
-        label="From Account:"
-        name={fromName}
-        account={fromAccount}
-        logo={fromLogo}
-        fallbackInitial={(fromName || 'A').charAt(0)}
-      />
+      {/* Sender / recipient block — inset from the card edges so it reads as a
+          neat, centred group under the amount instead of hugging the left edge. */}
+      <View style={styles.partyBlock}>
+        <Party
+          label="From Account:"
+          name={fromName}
+          account={fromAccount}
+          logo={fromLogo}
+          fallbackInitial={(fromName || 'A').charAt(0)}
+        />
 
-      <View style={{ height: spacing.md }} />
+        <View style={{ height: spacing.lg }} />
 
-      <Party
-        label="To Account:"
-        name={toName}
-        account={toAccount}
-        logo={toLogo}
-        fallbackInitial={(toName || 'B').charAt(0)}
-      />
+        <Party
+          label="To Account:"
+          name={toName}
+          account={toAccount}
+          logo={toLogo}
+          fallbackInitial={(toName || 'B').charAt(0)}
+        />
+      </View>
 
       <View style={styles.divider} />
 
@@ -423,6 +427,7 @@ const styles = StyleSheet.create({
     marginVertical: spacing.lg,
   },
 
+  partyBlock: { paddingHorizontal: spacing.md },
   party: { flexDirection: 'row', alignItems: 'center' },
   partyLogo: { width: 44, height: 44, marginRight: 14 },
   partyLogoFallback: {
