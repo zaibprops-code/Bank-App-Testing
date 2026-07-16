@@ -164,9 +164,13 @@ function ReceiptDetails({
       {/* Amount on a light-grey box with a faint, tilted brand watermark */}
       <View style={styles.amountBox}>
         <View style={styles.watermark} pointerEvents="none">
-          {Array.from({ length: 9 }).map((_, i) => (
-            <Text key={i} style={styles.watermarkText} numberOfLines={1}>
-              {`${brand}    ${brand}    ${brand}    ${brand}    ${brand}    ${brand}`}
+          {Array.from({ length: 7 }).map((_, i) => (
+            <Text
+              key={i}
+              style={[styles.watermarkText, i % 2 === 1 && styles.watermarkOffset]}
+              numberOfLines={1}
+            >
+              {`${brand}   `.repeat(8)}
             </Text>
           ))}
         </View>
@@ -460,27 +464,35 @@ const styles = StyleSheet.create({
 
   amountBox: {
     marginTop: spacing.md,
-    minHeight: 92,
-    borderRadius: 16,
+    minHeight: 76,
+    borderRadius: 14,
     backgroundColor: '#F2F2F5',
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    paddingVertical: spacing.lg,
+    paddingVertical: spacing.md,
   },
+  // Extends beyond the box on every side so the small tiled text still covers
+  // the corners once rotated — no scaling, so the font stays small and dense.
   watermark: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'space-around',
-    opacity: 0.14,
-    transform: [{ rotate: '-20deg' }, { scale: 1.5 }],
+    position: 'absolute',
+    top: -24,
+    bottom: -24,
+    left: -50,
+    right: -50,
+    justifyContent: 'space-between',
+    opacity: 0.11,
+    transform: [{ rotate: '-18deg' }],
   },
   watermarkText: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 12.5,
+    fontWeight: '500',
     color: colors.textMuted,
     fontStyle: 'italic',
-    textAlign: 'center',
+    letterSpacing: 0.3,
   },
+  // Brick offset on alternate rows for the staggered watermark pattern.
+  watermarkOffset: { marginLeft: 46 },
   amountText: { fontSize: 30, fontWeight: '800', color: colors.accentGreen, letterSpacing: 0.5 },
 
   dateText: { textAlign: 'center', color: colors.textDark, fontSize: 13.5, marginTop: spacing.md, fontWeight: '600' },
