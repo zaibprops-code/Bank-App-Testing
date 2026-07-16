@@ -177,7 +177,7 @@ export default function HomeScreen({ navigation }) {
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={{ padding: spacing.md, paddingBottom: spacing.xl }}
+        contentContainerStyle={{ paddingTop: spacing.md, paddingBottom: spacing.xl }}
         showsVerticalScrollIndicator={false}
       >
         {/* Account panel: purple gradient frame around a pure-white card */}
@@ -236,19 +236,21 @@ export default function HomeScreen({ navigation }) {
           </View>
         </LinearGradient>
 
-        {/* Feature tiles */}
-        <View style={styles.grid}>
-          {FEATURES.map((item) => (
-            <TouchableOpacity
-              key={item.key}
-              style={styles.tile}
-              activeOpacity={0.7}
-              onPress={() => onTilePress(item)}
-            >
-              <View style={styles.tileIcon}>{item.icon(colors.primary)}</View>
-              <Text style={styles.tileLabel} numberOfLines={3}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
+        {/* Box 1 — grey tiles panel that tucks up under the account panel */}
+        <View style={styles.box1}>
+          <View style={styles.grid}>
+            {FEATURES.map((item) => (
+              <TouchableOpacity
+                key={item.key}
+                style={styles.tile}
+                activeOpacity={0.7}
+                onPress={() => onTilePress(item)}
+              >
+                <View style={styles.tileIcon}>{item.icon(colors.primary)}</View>
+                <Text style={styles.tileLabel} numberOfLines={3}>{item.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
       </ScrollView>
 
@@ -287,13 +289,34 @@ const styles = StyleSheet.create({
 
   panel: {
     borderRadius: 16,
-    padding: spacing.md,
+    paddingTop: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.xl, // extra purple below the buttons for box 1 to tuck into
     marginTop: spacing.xs,
+    marginHorizontal: spacing.md, // box 2 sits inset (narrower than box 1)
+    zIndex: 1,
     elevation: 4,
     shadowColor: '#000',
     shadowOpacity: 0.18,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 3 },
+  },
+  // Box 1: grey feature-tiles panel with rounded top, pulled up so it tucks
+  // beneath the account panel (box 2) and sits slightly wider than it.
+  box1: {
+    marginTop: -18,
+    marginHorizontal: spacing.xs,
+    backgroundColor: colors.screenBg,
+    borderTopLeftRadius: 26,
+    borderTopRightRadius: 26,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.lg,
+    zIndex: 2,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: -2 },
   },
   card: {
     backgroundColor: colors.cardBg,
@@ -345,7 +368,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginTop: spacing.md,
   },
   tile: {
     width: TILE_WIDTH,
