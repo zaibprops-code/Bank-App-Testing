@@ -512,7 +512,9 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
 
-  partyBlock: { paddingHorizontal: spacing.md },
+  // Inset from both card edges so the sender / recipient rows sit with
+  // balanced left and right spacing instead of hugging the left edge.
+  partyBlock: { paddingHorizontal: spacing.xl },
   party: { flexDirection: 'row', alignItems: 'center' },
   partyLogo: { width: 44, height: 44, marginRight: 14 },
   partyLogoFallback: {
@@ -529,9 +531,11 @@ const styles = StyleSheet.create({
   partyName: { fontSize: 15.5, fontWeight: '800', color: colors.textDark },
   partyAccount: { fontSize: 13, color: colors.textMuted, marginTop: 1 },
 
-  metaRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', marginBottom: 4 },
+  // Centred so the reference / transaction meta sits with equal margins on
+  // both sides of the card.
+  metaRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', marginBottom: 4 },
   metaLabel: { fontSize: 13, color: colors.textMuted },
-  metaValue: { fontSize: 13, color: colors.textDark, fontWeight: '700' },
+  metaValue: { fontSize: 13, color: '#6B7079', fontWeight: '400' },
 
   actionsRow: {
     flexDirection: 'row',
