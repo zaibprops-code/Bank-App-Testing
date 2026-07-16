@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Bank App",
+    "name": "Meezan Bank",
     "slug": "bank-app-testing",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -39,9 +39,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.example.bankapptesting",
       "infoPlist": {
-        "NSPhotoLibraryAddUsageDescription": "Allow Bank App to save transaction receipts to your gallery.",
-        "NSLocationWhenInUseUsageDescription": "Allow Bank App to use your location to find the Qibla direction and nearby branches.",
-        "NSFaceIDUsageDescription": "Allow Bank App to use Face ID to unlock the app."
+        "NSPhotoLibraryAddUsageDescription": "Allow Meezan Bank to save transaction receipts to your gallery.",
+        "NSLocationWhenInUseUsageDescription": "Allow Meezan Bank to use your location to find the Qibla direction and nearby branches.",
+        "NSFaceIDUsageDescription": "Allow Meezan Bank to use Face ID to unlock the app."
       }
     },
     "android": {
