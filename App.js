@@ -52,7 +52,7 @@ export default function App() {
             <Stack.Screen
               name="Transactions"
               component={TransactionsScreen}
-              options={{ title: 'Transactions' }}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="NewTransfer"
