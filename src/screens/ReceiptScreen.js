@@ -52,6 +52,38 @@ function formatDateTime(iso) {
   return `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} | ${h}:${mm} ${ampm}`;
 }
 
+// Flat-design success tick: a green circle with a bold white checkmark and a
+// soft diagonal "long shadow" cast down-right from the check. Shared by the
+// on-screen receipt and the off-screen capture so the two never drift.
+function SuccessTick() {
+  const SHADOW_STEPS = 16;
+  const CHECK_SIZE = 46;
+  return (
+    <LinearGradient
+      colors={['#4EC667', '#25A244']}
+      start={{ x: 0.2, y: 0 }}
+      end={{ x: 0.85, y: 1 }}
+      style={styles.tickCircle}
+    >
+      {/* Long shadow — stacked, faint dark checks stepping toward bottom-right.
+          Each layer fills the circle and centres its check, so overflow:hidden
+          on the circle trims the tail into the classic long-shadow wedge. */}
+      {Array.from({ length: SHADOW_STEPS }).map((_, i) => (
+        <View key={i} style={[StyleSheet.absoluteFill, styles.tickCenter]} pointerEvents="none">
+          <Ionicons
+            name="checkmark"
+            size={CHECK_SIZE}
+            color="rgba(0,0,0,0.05)"
+            style={{ transform: [{ translateX: (i + 1) * 2 }, { translateY: (i + 1) * 2 }] }}
+          />
+        </View>
+      ))}
+
+      <Ionicons name="checkmark" size={CHECK_SIZE} color={colors.white} />
+    </LinearGradient>
+  );
+}
+
 function Party({ label, name, account, logo, fallbackInitial }) {
   return (
     <View style={styles.party}>
@@ -260,9 +292,7 @@ export default function ReceiptScreen({ navigation, route }) {
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.body}>
         <View style={styles.checkWrap}>
-          <View style={styles.successCircle}>
-            <Ionicons name="checkmark" size={40} color={colors.white} />
-          </View>
+          <SuccessTick />
         </View>
 
         <View style={styles.card}>
@@ -320,9 +350,7 @@ export default function ReceiptScreen({ navigation, route }) {
       <View style={styles.captureOffscreen} pointerEvents="none">
         <View ref={shotRef} collapsable={false} style={styles.captureCard}>
           <View style={styles.captureCheckWrap}>
-            <View style={styles.successCircle}>
-              <Ionicons name="checkmark" size={40} color={colors.white} />
-            </View>
+            <SuccessTick />
           </View>
           <View style={styles.card}>
             <ReceiptDetails
@@ -367,16 +395,15 @@ const styles = StyleSheet.create({
   captureCheckWrap: { alignItems: 'center', marginBottom: -36, zIndex: 2 },
 
   checkWrap: { alignItems: 'center', marginBottom: -36, zIndex: 2 },
-  successCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: colors.accentGreen,
+  tickCircle: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 4,
-    borderColor: colors.screenBg,
+    overflow: 'hidden',
   },
+  tickCenter: { alignItems: 'center', justifyContent: 'center' },
 
   card: {
     backgroundColor: colors.white,
