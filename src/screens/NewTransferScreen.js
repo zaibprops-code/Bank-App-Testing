@@ -28,6 +28,20 @@ const OTHER_BANKS = [
   { key: 'ubl', name: 'UBL', logo: require('../../assets/banks/ubl.png') },
   { key: 'alfalah', name: 'Bank Alfalah', logo: require('../../assets/banks/alfalah.png') },
   { key: 'allied', name: 'Allied Bank', logo: require('../../assets/banks/allied.png') },
+
+  // Newly added banks. Drop a transparent PNG into assets/banks/ and set
+  // `logo: require('../../assets/banks/<file>.png')` to replace the tinted
+  // initials placeholder with the official logo.
+  { key: 'mcb', name: 'MCB', initials: 'MCB', tint: '#1B7A3D' },
+  { key: 'faysal', name: 'Faysal Bank', initials: 'FB', tint: '#0E7C7B' },
+  { key: 'sadapay', name: 'SadaPay', initials: 'SP', tint: '#2FBF71' },
+  { key: 'nayapay', name: 'NayaPay', initials: 'NP', tint: '#E23744' },
+  { key: 'askari', name: 'Askari Bank', initials: 'AB', tint: '#1B4F8A' },
+  { key: 'bankislami', name: 'BankIslami/Aik', initials: 'BI', tint: '#6FAF46' },
+  { key: 'standardchartered', name: 'Standard Chartered', initials: 'SC', tint: '#0473EA' },
+  { key: 'habibmetro', name: 'Habib Metro', initials: 'HM', tint: '#0E6B3D' },
+  { key: 'bop', name: 'Bank of Punjab', initials: 'BOP', tint: '#E8622A' },
+  { key: 'soneri', name: 'Soneri Bank', initials: 'SB', tint: '#C9A227' },
 ];
 
 function BankLogo({ bank }) {
