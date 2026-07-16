@@ -293,13 +293,18 @@ export default function ReceiptScreen({ navigation, route }) {
         </View>
       </ScrollView>
 
-      {/* Make Another Payment — pinned to the bottom with a gradient */}
-      <TouchableOpacity activeOpacity={0.85} onPress={makeAnotherPayment}>
+      {/* Make Another Payment — floating gradient bar, kept clear of the
+          phone's navigation bar / gesture area. */}
+      <TouchableOpacity
+        activeOpacity={0.85}
+        onPress={makeAnotherPayment}
+        style={[styles.payWrap, { marginBottom: insets.bottom + spacing.lg }]}
+      >
         <LinearGradient
           colors={[colors.gradientStart, colors.gradientEnd]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
-          style={[styles.payBtn, { paddingBottom: insets.bottom + 16 }]}
+          style={styles.payBtn}
         >
           <Text style={styles.payText}>Make Another Payment</Text>
         </LinearGradient>
@@ -433,11 +438,20 @@ const styles = StyleSheet.create({
   action: { flex: 1, alignItems: 'center', paddingHorizontal: spacing.xs },
   actionText: { color: colors.primary, fontSize: 12.5, fontWeight: '600', marginTop: 6, textAlign: 'center' },
 
+  payWrap: {
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.sm,
+    borderRadius: 14,
+    overflow: 'hidden',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+  },
   payBtn: {
-    paddingTop: 18,
+    paddingVertical: 17,
     alignItems: 'center',
-    borderTopLeftRadius: 18,
-    borderTopRightRadius: 18,
   },
   payText: { color: colors.white, fontWeight: '800', fontSize: 16 },
 });
