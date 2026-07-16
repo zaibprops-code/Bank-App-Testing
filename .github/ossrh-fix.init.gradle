@@ -1,0 +1,28 @@
+// CI fix — the oss.sonatype.org (OSSRH) snapshots repository was decommissioned
+// and now returns HTTP 504. Gradle treats that as a repo error, disables the
+// repository, and aborts dependency resolution instead of falling through to
+// Maven Central, so even stable artifacts (e.g. kotlin-stdlib) fail to resolve.
+//
+// React Native's Gradle plugin registers that repository programmatically (in
+// compiled plugin code), so it can't be patched as text. Strip it from every
+// repository list — settings, plugin management and all projects — after
+// configuration but before resolution. A stable Expo / React Native build needs
+// nothing from it; everything resolves from google() and mavenCentral().
+
+def isOssrh = { repo ->
+    repo instanceof org.gradle.api.artifacts.repositories.MavenArtifactRepository &&
+        repo.url != null &&
+        repo.url.toString().contains('oss.sonatype.org')
+}
+
+settingsEvaluated { settings ->
+    try { settings.dependencyResolutionManagement.repositories.removeIf { isOssrh(it) } } catch (ignored) {}
+    try { settings.pluginManagement.repositories.removeIf { isOssrh(it) } } catch (ignored) {}
+}
+
+gradle.projectsEvaluated {
+    gradle.rootProject.allprojects { p ->
+        p.repositories.removeIf { isOssrh(it) }
+        try { p.buildscript.repositories.removeIf { isOssrh(it) } } catch (ignored) {}
+    }
+}
