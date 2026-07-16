@@ -12,7 +12,7 @@
 // ----------------------------------------------------------------------------
 
 export const branding = {
-  bankName: 'Digital Bank', // <-- CHANGE THIS to your own bank/app name
+  bankName: 'Meezan Bank', // shown in the app header
   logo: require('../../assets/banks/meezan.png'), // Meezan Bank logo shown in the header
 };
 
