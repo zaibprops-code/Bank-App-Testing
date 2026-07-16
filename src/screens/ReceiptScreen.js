@@ -84,6 +84,19 @@ function SuccessTick() {
   );
 }
 
+// Uniform dashed divider. RN's borderStyle:'dashed' renders inconsistently
+// across platforms, so we draw the dashes as individual segments and clip the
+// overflow, guaranteeing an even, full-width dashed line everywhere.
+function DashedLine() {
+  return (
+    <View style={styles.dashRow} pointerEvents="none">
+      {Array.from({ length: 60 }).map((_, i) => (
+        <View key={i} style={styles.dash} />
+      ))}
+    </View>
+  );
+}
+
 function Party({ label, name, account, logo, fallbackInitial }) {
   return (
     <View style={styles.party}>
@@ -138,7 +151,7 @@ function ReceiptDetails({
 
       <Text style={styles.dateText}>{dateStr}</Text>
 
-      <View style={styles.divider} />
+      <DashedLine />
 
       {/* Sender / recipient block — inset from the card edges so it reads as a
           neat, centred group under the amount instead of hugging the left edge. */}
@@ -162,7 +175,7 @@ function ReceiptDetails({
         />
       </View>
 
-      <View style={styles.divider} />
+      <DashedLine />
 
       {/* Reference / transaction meta */}
       <View style={styles.metaRow}>
@@ -446,12 +459,19 @@ const styles = StyleSheet.create({
 
   dateText: { textAlign: 'center', color: colors.textDark, fontSize: 13.5, marginTop: spacing.md, fontWeight: '600' },
 
-  divider: {
-    borderBottomWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#C9C9CE',
-    borderRadius: 1,
+  // Manually drawn dashed divider (see DashedLine). overflow:'hidden' clips
+  // the trailing dashes so the line ends flush with the card padding.
+  dashRow: {
+    flexDirection: 'row',
+    overflow: 'hidden',
     marginVertical: spacing.lg,
+  },
+  dash: {
+    width: 8,
+    height: 1.5,
+    borderRadius: 1,
+    backgroundColor: '#C9C9CE',
+    marginRight: 6,
   },
 
   partyBlock: { paddingHorizontal: spacing.md },
