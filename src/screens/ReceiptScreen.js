@@ -92,12 +92,12 @@ function ReceiptDetails({
     <>
       <Text style={styles.successTitle}>Transaction Successful</Text>
 
-      {/* Amount with faint brand watermark */}
+      {/* Amount on a light-grey box with a faint, tilted brand watermark */}
       <View style={styles.amountBox}>
         <View style={styles.watermark} pointerEvents="none">
-          {Array.from({ length: 4 }).map((_, i) => (
+          {Array.from({ length: 9 }).map((_, i) => (
             <Text key={i} style={styles.watermarkText} numberOfLines={1}>
-              {`${brand}   ${brand}   ${brand}   ${brand}`}
+              {`${brand}    ${brand}    ${brand}    ${brand}    ${brand}    ${brand}`}
             </Text>
           ))}
         </View>
@@ -390,13 +390,27 @@ const styles = StyleSheet.create({
 
   amountBox: {
     marginTop: spacing.md,
-    height: 56,
+    minHeight: 92,
+    borderRadius: 16,
+    backgroundColor: '#F2F2F5',
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
+    paddingVertical: spacing.lg,
   },
-  watermark: { ...StyleSheet.absoluteFillObject, justifyContent: 'space-around', opacity: 0.12 },
-  watermarkText: { fontSize: 12, fontWeight: '700', color: colors.textMuted, fontStyle: 'italic' },
+  watermark: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'space-around',
+    opacity: 0.14,
+    transform: [{ rotate: '-20deg' }, { scale: 1.5 }],
+  },
+  watermarkText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.textMuted,
+    fontStyle: 'italic',
+    textAlign: 'center',
+  },
   amountText: { fontSize: 30, fontWeight: '800', color: colors.accentGreen, letterSpacing: 0.5 },
 
   dateText: { textAlign: 'center', color: colors.textDark, fontSize: 13.5, marginTop: spacing.md, fontWeight: '600' },
