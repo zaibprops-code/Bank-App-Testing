@@ -52,35 +52,59 @@ function formatDateTime(iso) {
   return `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} | ${h}:${mm} ${ampm}`;
 }
 
-// Flat-design success tick: a green circle with a bold white checkmark and a
-// soft diagonal "long shadow" cast down-right from the check. Shared by the
-// on-screen receipt and the off-screen capture so the two never drift.
-function SuccessTick() {
-  const SHADOW_STEPS = 16;
-  const CHECK_SIZE = 46;
+// A thick, rounded checkmark drawn as an L (right + bottom borders) rotated
+// 45°, so we control the stroke weight exactly instead of relying on a thin
+// icon-font glyph.
+function CheckMark({ color, thickness = 7 }) {
   return (
-    <LinearGradient
-      colors={['#4EC667', '#25A244']}
-      start={{ x: 0.2, y: 0 }}
-      end={{ x: 0.85, y: 1 }}
-      style={styles.tickCircle}
-    >
-      {/* Long shadow — stacked, faint dark checks stepping toward bottom-right.
-          Each layer fills the circle and centres its check, so overflow:hidden
-          on the circle trims the tail into the classic long-shadow wedge. */}
+    <View
+      style={{
+        width: 23,
+        height: 42,
+        borderColor: color,
+        borderRightWidth: thickness,
+        borderBottomWidth: thickness,
+        borderRadius: 2,
+        transform: [{ rotate: '45deg' }],
+      }}
+    />
+  );
+}
+
+// Flat-design success tick that matches the reference: a solid green circle
+// with a bold white checkmark and a subtle darker-green "long shadow" cast
+// toward the bottom-right. Shared by the on-screen receipt and the off-screen
+// capture so the two never drift.
+function SuccessTick() {
+  const SHADOW_STEPS = 9;
+  return (
+    <View style={styles.tickCircle}>
+      {/* Body depth: a soft highlight top-left fading to a darker bottom-right. */}
+      <LinearGradient
+        colors={['rgba(255,255,255,0.12)', 'rgba(0,0,0,0.16)']}
+        start={{ x: 0.15, y: 0.1 }}
+        end={{ x: 0.9, y: 1 }}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
+      />
+
+      {/* Long shadow — faint dark-green checks stepping toward bottom-right.
+          overflow:hidden on the circle trims the tail into a soft wedge. */}
       {Array.from({ length: SHADOW_STEPS }).map((_, i) => (
         <View key={i} style={[StyleSheet.absoluteFill, styles.tickCenter]} pointerEvents="none">
-          <Ionicons
-            name="checkmark"
-            size={CHECK_SIZE}
-            color="rgba(0,0,0,0.05)"
-            style={{ transform: [{ translateX: (i + 1) * 2 }, { translateY: (i + 1) * 2 }] }}
-          />
+          <View style={{ transform: [{ translateX: (i + 1) * 1.8 }, { translateY: (i + 1) * 1.8 }] }}>
+            <CheckMark color="rgba(0,45,18,0.10)" />
+          </View>
         </View>
       ))}
 
-      <Ionicons name="checkmark" size={CHECK_SIZE} color={colors.white} />
-    </LinearGradient>
+      {/* Bold white checkmark, nudged for optical centring. */}
+      <View style={[StyleSheet.absoluteFill, styles.tickCenter]} pointerEvents="none">
+        <View style={{ transform: [{ translateX: -1 }, { translateY: -2 }] }}>
+          <CheckMark color={colors.white} />
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -413,6 +437,7 @@ const styles = StyleSheet.create({
     width: 84,
     height: 84,
     borderRadius: 42,
+    backgroundColor: '#33A852',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
