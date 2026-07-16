@@ -319,7 +319,9 @@ export default function ReceiptScreen({ navigation, route }) {
           </View>
           </View>
 
-          <SuccessTick style={styles.floatingTick} />
+          <View style={styles.floatingTick} pointerEvents="none">
+            <SuccessTick />
+          </View>
         </View>
       </ScrollView>
 
@@ -364,7 +366,9 @@ export default function ReceiptScreen({ navigation, route }) {
               />
             </View>
 
-            <SuccessTick style={styles.floatingTick} />
+            <View style={styles.floatingTick} pointerEvents="none">
+              <SuccessTick />
+            </View>
           </View>
         </View>
       </View>
