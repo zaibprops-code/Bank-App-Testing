@@ -13,7 +13,7 @@
 
 export const branding = {
   bankName: 'Digital Bank', // <-- CHANGE THIS to your own bank/app name
-  logo: require('../../assets/logo.png'), // <-- REPLACE assets/logo.png with your logo
+  logo: require('../../assets/banks/meezan.png'), // Meezan Bank logo shown in the header
 };
 
 export const account = {
