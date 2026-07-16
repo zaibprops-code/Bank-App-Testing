@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { captureRef } from 'react-native-view-shot';
@@ -253,7 +254,7 @@ export default function ReceiptScreen({ navigation, route }) {
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={styles.body}>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.body}>
         <View style={styles.checkWrap}>
           <View style={styles.successCircle}>
             <Ionicons name="checkmark" size={40} color={colors.white} />
@@ -290,11 +291,19 @@ export default function ReceiptScreen({ navigation, route }) {
             </TouchableOpacity>
           </View>
         </View>
-
-        <TouchableOpacity style={styles.payBtn} onPress={makeAnotherPayment} activeOpacity={0.85}>
-          <Text style={styles.payText}>Make Another Payment</Text>
-        </TouchableOpacity>
       </ScrollView>
+
+      {/* Make Another Payment — pinned to the bottom with a gradient */}
+      <TouchableOpacity activeOpacity={0.85} onPress={makeAnotherPayment}>
+        <LinearGradient
+          colors={[colors.gradientStart, colors.gradientEnd]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={[styles.payBtn, { paddingBottom: insets.bottom + 16 }]}
+        >
+          <Text style={styles.payText}>Make Another Payment</Text>
+        </LinearGradient>
+      </TouchableOpacity>
 
       {/* Off-screen clean receipt rendered to an image for Share / Save.
           Kept out of the visible flow so the shared picture never includes the
@@ -329,11 +338,12 @@ export default function ReceiptScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.screenBg },
+  scroll: { flex: 1 },
 
   header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.md, height: 44 },
   hBtn: { padding: 6, marginLeft: spacing.sm },
 
-  body: { padding: spacing.lg, paddingTop: spacing.xl },
+  body: { padding: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.xl },
 
   // Off-screen container for the image capture: laid out (so it renders) but
   // pushed far off the visible area.
@@ -424,11 +434,10 @@ const styles = StyleSheet.create({
   actionText: { color: colors.primary, fontSize: 12.5, fontWeight: '600', marginTop: 6, textAlign: 'center' },
 
   payBtn: {
-    backgroundColor: colors.buttonPurple,
-    borderRadius: 10,
-    paddingVertical: 17,
+    paddingTop: 18,
     alignItems: 'center',
-    marginTop: spacing.md,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
   },
   payText: { color: colors.white, fontWeight: '800', fontSize: 16 },
 });
