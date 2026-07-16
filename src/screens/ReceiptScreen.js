@@ -55,8 +55,8 @@ function formatDateTime(iso) {
 
 // Success tick — the supplied green check image. Shared by the on-screen
 // receipt and the off-screen capture so the two never drift.
-function SuccessTick() {
-  return <Image source={TICK_ICON} style={styles.tickImage} resizeMode="contain" />;
+function SuccessTick({ style }) {
+  return <Image source={TICK_ICON} style={[styles.tickImage, style]} resizeMode="contain" />;
 }
 
 // Uniform dashed divider. RN's borderStyle:'dashed' renders inconsistently
@@ -284,24 +284,24 @@ export default function ReceiptScreen({ navigation, route }) {
       </View>
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.body}>
-        <View style={styles.checkWrap}>
-          <SuccessTick />
-        </View>
-
-        <View style={styles.card}>
-          <ReceiptDetails
-            brand={brand}
-            amountStr={amountStr}
-            dateStr={dateStr}
-            fromName={acct.accountTitle}
-            fromAccount={maskAccount(acct.accountNumber)}
-            fromLogo={branding.logo}
-            toName={toName}
-            toAccount={toAccount}
-            toLogo={bank?.logo}
-            stan={stan}
-            txnType={txnType}
-          />
+        {/* Card + tick as a stack: the tick is the LAST child and absolutely
+            positioned, so it paints on top of the card without relying on
+            zIndex/negative margins (which capture-to-image doesn't honour). */}
+        <View style={styles.cardStack}>
+          <View style={styles.card}>
+            <ReceiptDetails
+              brand={brand}
+              amountStr={amountStr}
+              dateStr={dateStr}
+              fromName={acct.accountTitle}
+              fromAccount={maskAccount(acct.accountNumber)}
+              fromLogo={branding.logo}
+              toName={toName}
+              toAccount={toAccount}
+              toLogo={bank?.logo}
+              stan={stan}
+              txnType={txnType}
+            />
 
           <View style={styles.actionsRow}>
             <TouchableOpacity style={styles.action} onPress={onAddBeneficiary} activeOpacity={0.7}>
@@ -317,6 +317,9 @@ export default function ReceiptScreen({ navigation, route }) {
               <Text style={styles.actionText}>Save Receipt</Text>
             </TouchableOpacity>
           </View>
+          </View>
+
+          <SuccessTick style={styles.floatingTick} />
         </View>
       </ScrollView>
 
@@ -342,23 +345,26 @@ export default function ReceiptScreen({ navigation, route }) {
           action buttons or the "Make Another Payment" bar. */}
       <View style={styles.captureOffscreen} pointerEvents="none">
         <View ref={shotRef} collapsable={false} style={styles.captureCard}>
-          <View style={styles.captureCheckWrap}>
-            <SuccessTick />
-          </View>
-          <View style={styles.card}>
-            <ReceiptDetails
-              brand={brand}
-              amountStr={amountStr}
-              dateStr={dateStr}
-              fromName={acct.accountTitle}
-              fromAccount={maskAccount(acct.accountNumber)}
-              fromLogo={branding.logo}
-              toName={toName}
-              toAccount={toAccount}
-              toLogo={bank?.logo}
-              stan={stan}
-              txnType={txnType}
-            />
+          {/* Same tick-on-top stack as the on-screen card so the exported
+              image never clips or hides the tick. */}
+          <View style={styles.cardStack}>
+            <View style={styles.card}>
+              <ReceiptDetails
+                brand={brand}
+                amountStr={amountStr}
+                dateStr={dateStr}
+                fromName={acct.accountTitle}
+                fromAccount={maskAccount(acct.accountNumber)}
+                fromLogo={branding.logo}
+                toName={toName}
+                toAccount={toAccount}
+                toLogo={bank?.logo}
+                stan={stan}
+                txnType={txnType}
+              />
+            </View>
+
+            <SuccessTick style={styles.floatingTick} />
           </View>
         </View>
       </View>
@@ -382,12 +388,15 @@ const styles = StyleSheet.create({
     width: 380,
     backgroundColor: colors.screenBg,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl + 36,
+    paddingTop: spacing.lg,
     paddingBottom: spacing.lg,
   },
-  captureCheckWrap: { alignItems: 'center', marginBottom: -36, zIndex: 2 },
 
-  checkWrap: { alignItems: 'center', marginBottom: -36, zIndex: 2 },
+  // Reserves the space above the card for the tick's upper half; the tick is
+  // absolutely positioned on top (see floatingTick), so no zIndex is needed
+  // and the image capture never clips it.
+  cardStack: { paddingTop: 48 },
+  floatingTick: { position: 'absolute', top: 0, left: 0, right: 0, alignItems: 'center' },
   tickImage: { width: 84, height: 84 },
 
   card: {
