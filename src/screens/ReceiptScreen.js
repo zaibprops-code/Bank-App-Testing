@@ -290,9 +290,10 @@ export default function ReceiptScreen({ navigation, route }) {
 
   return (
     <View style={styles.root}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
+      {/* Purple status-bar strip sized to the exact status-bar height */}
+      <View style={{ height: insets.top, backgroundColor: colors.primary }} />
       {/* Light header with home / power icons pinned to the top-right */}
-      <View style={{ height: insets.top }} />
       <View style={styles.header}>
         <View style={{ flex: 1 }} />
         <TouchableOpacity onPress={goHome} style={styles.hBtn}>
