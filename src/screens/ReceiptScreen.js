@@ -21,6 +21,7 @@ import { useAccount } from '../context/AccountContext';
 import { branding } from '../config/branding';
 import { colors, spacing } from '../theme';
 
+const TICK_ICON = require('../../assets/tick.png');
 const BEN_KEY = '@bankapp_beneficiaries';
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -52,60 +53,10 @@ function formatDateTime(iso) {
   return `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()} | ${h}:${mm} ${ampm}`;
 }
 
-// A thick, rounded checkmark drawn as an L (right + bottom borders) rotated
-// 45°, so we control the stroke weight exactly instead of relying on a thin
-// icon-font glyph.
-function CheckMark({ color, thickness = 7 }) {
-  return (
-    <View
-      style={{
-        width: 23,
-        height: 42,
-        borderColor: color,
-        borderRightWidth: thickness,
-        borderBottomWidth: thickness,
-        borderRadius: 2,
-        transform: [{ rotate: '45deg' }],
-      }}
-    />
-  );
-}
-
-// Flat-design success tick that matches the reference: a solid green circle
-// with a bold white checkmark and a subtle darker-green "long shadow" cast
-// toward the bottom-right. Shared by the on-screen receipt and the off-screen
-// capture so the two never drift.
+// Success tick — the supplied green check image. Shared by the on-screen
+// receipt and the off-screen capture so the two never drift.
 function SuccessTick() {
-  const SHADOW_STEPS = 9;
-  return (
-    <View style={styles.tickCircle}>
-      {/* Body depth: a soft highlight top-left fading to a darker bottom-right. */}
-      <LinearGradient
-        colors={['rgba(255,255,255,0.12)', 'rgba(0,0,0,0.16)']}
-        start={{ x: 0.15, y: 0.1 }}
-        end={{ x: 0.9, y: 1 }}
-        style={StyleSheet.absoluteFill}
-        pointerEvents="none"
-      />
-
-      {/* Long shadow — faint dark-green checks stepping toward bottom-right.
-          overflow:hidden on the circle trims the tail into a soft wedge. */}
-      {Array.from({ length: SHADOW_STEPS }).map((_, i) => (
-        <View key={i} style={[StyleSheet.absoluteFill, styles.tickCenter]} pointerEvents="none">
-          <View style={{ transform: [{ translateX: (i + 1) * 1.8 }, { translateY: (i + 1) * 1.8 }] }}>
-            <CheckMark color="rgba(0,45,18,0.10)" />
-          </View>
-        </View>
-      ))}
-
-      {/* Bold white checkmark, nudged for optical centring. */}
-      <View style={[StyleSheet.absoluteFill, styles.tickCenter]} pointerEvents="none">
-        <View style={{ transform: [{ translateX: -1 }, { translateY: -2 }] }}>
-          <CheckMark color={colors.white} />
-        </View>
-      </View>
-    </View>
-  );
+  return <Image source={TICK_ICON} style={styles.tickImage} resizeMode="contain" />;
 }
 
 // Uniform dashed divider. RN's borderStyle:'dashed' renders inconsistently
@@ -437,16 +388,7 @@ const styles = StyleSheet.create({
   captureCheckWrap: { alignItems: 'center', marginBottom: -36, zIndex: 2 },
 
   checkWrap: { alignItems: 'center', marginBottom: -36, zIndex: 2 },
-  tickCircle: {
-    width: 84,
-    height: 84,
-    borderRadius: 42,
-    backgroundColor: '#33A852',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  tickCenter: { alignItems: 'center', justifyContent: 'center' },
+  tickImage: { width: 84, height: 84 },
 
   card: {
     backgroundColor: colors.white,
