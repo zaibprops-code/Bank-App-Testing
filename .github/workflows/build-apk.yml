@@ -53,9 +53,37 @@ jobs:
           echo "org.gradle.workers.max=2" >> android/gradle.properties
           echo "android.enableJetifier=false" >> android/gradle.properties
 
+      - name: Repoint decommissioned Sonatype OSSRH repo to Maven Central
+        run: |
+          # oss.sonatype.org (OSSRH) was decommissioned and now returns HTTP 504.
+          # Gradle treats a 504 as a repo error, disables the repository, and
+          # aborts dependency resolution instead of falling through to Maven
+          # Central — so even stable artifacts (e.g. kotlin-stdlib) fail to
+          # resolve. The generated Expo/React Native Gradle files still list it,
+          # so repoint every reference to Maven Central, which is always up and
+          # serves all the stable releases this build actually needs.
+          OLD='https://oss.sonatype.org/content/repositories/snapshots'
+          NEW='https://repo1.maven.org/maven2'
+          FILES=$(grep -rl --include='*.gradle' --include='*.gradle.kts' "$OLD" android node_modules 2>/dev/null || true)
+          if [ -n "$FILES" ]; then
+            echo "$FILES" | while read -r f; do
+              echo "patching $f"
+              sed -i "s#$OLD#$NEW#g" "$f"
+            done
+          else
+            echo "No references to $OLD found."
+          fi
+
       - name: Build release APK (standalone, JS bundled inside)
         working-directory: android
-        run: ./gradlew assembleRelease --no-daemon
+        run: |
+          for attempt in 1 2 3; do
+            echo "== gradle assembleRelease (attempt $attempt) =="
+            ./gradlew assembleRelease --no-daemon --stacktrace && exit 0
+            echo "Attempt $attempt failed."
+            [ "$attempt" = "3" ] && exit 1
+            echo "Retrying after transient failure..." && sleep 15
+          done
 
       - name: Rename APK
         run: cp android/app/build/outputs/apk/release/app-release.apk bank-app-testing.apk
