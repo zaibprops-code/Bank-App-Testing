@@ -115,13 +115,13 @@ function ReceiptDetails({
       {/* Amount on a light-grey box with a faint, tilted brand watermark */}
       <View style={styles.amountBox}>
         <View style={styles.watermark} pointerEvents="none">
-          {Array.from({ length: 7 }).map((_, i) => (
+          {Array.from({ length: 9 }).map((_, i) => (
             <Text
               key={i}
               style={[styles.watermarkText, i % 2 === 1 && styles.watermarkOffset]}
               numberOfLines={1}
             >
-              {`${brand}   `.repeat(8)}
+              {`${brand}    `.repeat(6)}
             </Text>
           ))}
         </View>
@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
 
   amountBox: {
     marginTop: spacing.md,
-    minHeight: 76,
+    minHeight: 88,
     borderRadius: 14,
     backgroundColor: '#F2F2F5',
     justifyContent: 'center',
@@ -423,28 +423,30 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingVertical: spacing.md,
   },
-  // Extends beyond the box on every side so the small tiled text still covers
-  // the corners once rotated — no scaling, so the font stays small and dense.
+  // Extends beyond the box on every side so the tiled text covers the corners
+  // once rotated. Fixed line height gives uniform, evenly-spaced rows; the
+  // extra rows overflow the box and are clipped for a continuous pattern.
   watermark: {
     position: 'absolute',
-    top: -24,
-    bottom: -24,
-    left: -50,
-    right: -50,
-    justifyContent: 'space-between',
-    opacity: 0.11,
-    transform: [{ rotate: '-18deg' }],
+    top: -30,
+    bottom: -30,
+    left: -55,
+    right: -55,
+    justifyContent: 'center',
+    opacity: 0.18,
+    transform: [{ rotate: '-20deg' }],
   },
   watermarkText: {
-    fontSize: 12.5,
+    fontSize: 13.5,
+    lineHeight: 19,
     fontWeight: '500',
     color: colors.textMuted,
     fontStyle: 'italic',
     letterSpacing: 0.3,
   },
-  // Brick offset on alternate rows for the staggered watermark pattern.
-  watermarkOffset: { marginLeft: 46 },
-  amountText: { fontSize: 30, fontWeight: '800', color: colors.accentGreen, letterSpacing: 0.5 },
+  // Brick offset on alternate rows for the staggered watermark lattice.
+  watermarkOffset: { marginLeft: 52 },
+  amountText: { fontSize: 30, fontWeight: '600', color: colors.accentGreen, letterSpacing: 0.5 },
 
   dateText: { textAlign: 'center', color: colors.textDark, fontSize: 13.5, marginTop: spacing.md, fontWeight: '600' },
 
