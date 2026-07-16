@@ -29,19 +29,16 @@ const OTHER_BANKS = [
   { key: 'alfalah', name: 'Bank Alfalah', logo: require('../../assets/banks/alfalah.png') },
   { key: 'allied', name: 'Allied Bank', logo: require('../../assets/banks/allied.png') },
 
-  // Newly added banks. Drop a transparent PNG into assets/banks/ and set
-  // `logo: require('../../assets/banks/<file>.png')` to replace the tinted
-  // initials placeholder with the official logo.
-  { key: 'mcb', name: 'MCB', initials: 'MCB', tint: '#1B7A3D' },
-  { key: 'faysal', name: 'Faysal Bank', initials: 'FB', tint: '#0E7C7B' },
-  { key: 'sadapay', name: 'SadaPay', initials: 'SP', tint: '#2FBF71' },
-  { key: 'nayapay', name: 'NayaPay', initials: 'NP', tint: '#E23744' },
-  { key: 'askari', name: 'Askari Bank', initials: 'AB', tint: '#1B4F8A' },
-  { key: 'bankislami', name: 'BankIslami/Aik', initials: 'BI', tint: '#6FAF46' },
-  { key: 'standardchartered', name: 'Standard Chartered', initials: 'SC', tint: '#0473EA' },
-  { key: 'habibmetro', name: 'Habib Metro', initials: 'HM', tint: '#0E6B3D' },
-  { key: 'bop', name: 'Bank of Punjab', initials: 'BOP', tint: '#E8622A' },
-  { key: 'soneri', name: 'Soneri Bank', initials: 'SB', tint: '#C9A227' },
+  { key: 'mcb', name: 'MCB', logo: require('../../assets/banks/mcb.png') },
+  { key: 'faysal', name: 'Faysal Bank', logo: require('../../assets/banks/faysal.png') },
+  { key: 'sadapay', name: 'SadaPay', logo: require('../../assets/banks/sadapay.png') },
+  { key: 'nayapay', name: 'NayaPay', logo: require('../../assets/banks/nayapay.png') },
+  { key: 'askari', name: 'Askari Bank', logo: require('../../assets/banks/askari.png') },
+  { key: 'bankislami', name: 'BankIslami/Aik', logo: require('../../assets/banks/bankislami.png') },
+  { key: 'standardchartered', name: 'Standard Chartered', logo: require('../../assets/banks/standardchartered.png') },
+  { key: 'habibmetro', name: 'Habib Metro', logo: require('../../assets/banks/habibmetro.png') },
+  { key: 'bop', name: 'Bank of Punjab', logo: require('../../assets/banks/bop.png') },
+  { key: 'soneri', name: 'Soneri Bank', logo: require('../../assets/banks/soneri.png') },
 ];
 
 function BankLogo({ bank }) {
