@@ -32,7 +32,7 @@ function Bar({ color, delay }) {
   return <Animated.View style={[styles.bar, { backgroundColor: color, transform: [{ translateY }] }]} />;
 }
 
-function ProcessingBars() {
+export function ProcessingBars() {
   return (
     <View style={styles.bars}>
       {BAR_COLORS.map((c, i) => (

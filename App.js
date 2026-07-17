@@ -15,6 +15,7 @@ import SendMoneyScreen from './src/screens/SendMoneyScreen';
 import NewTransferScreen from './src/screens/NewTransferScreen';
 import BankTransferScreen from './src/screens/BankTransferScreen';
 import AmountScreen from './src/screens/AmountScreen';
+import ReviewScreen from './src/screens/ReviewScreen';
 import ReceiptScreen from './src/screens/ReceiptScreen';
 import ProfileScreen from './src/screens/menu/ProfileScreen';
 import AccountsScreen from './src/screens/menu/AccountsScreen';
@@ -101,6 +102,11 @@ function MainApp() {
             <Stack.Screen
               name="Amount"
               component={AmountScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Review"
+              component={ReviewScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
