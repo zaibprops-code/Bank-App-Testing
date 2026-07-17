@@ -11,6 +11,7 @@ import {
   Alert,
 } from 'react-native';
 import { useAccount } from '../context/AccountContext';
+import ProcessingOverlay from '../components/ProcessingOverlay';
 import { colors, spacing } from '../theme';
 
 export default function SendMoneyScreen({ navigation, route }) {
@@ -19,6 +20,8 @@ export default function SendMoneyScreen({ navigation, route }) {
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
+  const [processing, setProcessing] = useState(false);
+  const [pendingTxn, setPendingTxn] = useState(null);
 
   const onSend = () => {
     try {
@@ -27,8 +30,10 @@ export default function SendMoneyScreen({ navigation, route }) {
         amount,
         title: presetTitle || (note ? note : 'Send Money'),
       });
-      // Show the freshly generated unique transaction id on a receipt.
-      navigation.replace('Receipt', { txn });
+      // Show the processing animation, then open the receipt after a
+      // realistic, variable wait (handled inside ProcessingOverlay).
+      setPendingTxn(txn);
+      setProcessing(true);
     } catch (e) {
       Alert.alert('Transaction failed', e.message);
     }
@@ -90,6 +95,12 @@ export default function SendMoneyScreen({ navigation, route }) {
           saved to your history.
         </Text>
       </ScrollView>
+
+      <ProcessingOverlay
+        visible={processing}
+        amountText={`PKR ${amount}`}
+        onDone={() => navigation.replace('Receipt', { txn: pendingTxn })}
+      />
     </KeyboardAvoidingView>
   );
 }

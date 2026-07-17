@@ -16,6 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAccount } from '../context/AccountContext';
 import { branding } from '../config/branding';
+import ProcessingOverlay from '../components/ProcessingOverlay';
 import { colors, spacing } from '../theme';
 
 const PURPOSES = ['Others', 'Family Support', 'Salary', 'Bill Payment', 'Business', 'Education'];
@@ -28,6 +29,8 @@ export default function AmountScreen({ navigation, route }) {
   const [amount, setAmount] = useState('');
   const [purpose, setPurpose] = useState('Others');
   const [purposeOpen, setPurposeOpen] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const [pendingTxn, setPendingTxn] = useState(null);
 
   const onNext = () => {
     try {
@@ -36,7 +39,10 @@ export default function AmountScreen({ navigation, route }) {
         amount,
         title: `Transfer to ${bank.name || 'Bank'}`,
       });
-      navigation.replace('Receipt', { txn, bank, accountNumber, accountTitle, purpose });
+      // Show the processing animation, then open the receipt after a
+      // realistic, variable wait (handled inside ProcessingOverlay).
+      setPendingTxn(txn);
+      setProcessing(true);
     } catch (e) {
       Alert.alert('Transaction failed', e.message);
     }
@@ -157,6 +163,14 @@ export default function AmountScreen({ navigation, route }) {
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <ProcessingOverlay
+        visible={processing}
+        amountText={`PKR ${amount}`}
+        onDone={() =>
+          navigation.replace('Receipt', { txn: pendingTxn, bank, accountNumber, accountTitle, purpose })
+        }
+      />
     </View>
   );
 }
