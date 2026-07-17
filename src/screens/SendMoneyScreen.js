@@ -11,32 +11,38 @@ import {
   Alert,
 } from 'react-native';
 import { useAccount } from '../context/AccountContext';
-import ProcessingOverlay from '../components/ProcessingOverlay';
 import { colors, spacing } from '../theme';
 
 export default function SendMoneyScreen({ navigation, route }) {
   const presetTitle = route?.params?.presetTitle;
-  const { balance, formatMoney, sendMoney } = useAccount();
+  const { balance, formatMoney } = useAccount();
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
-  const [processing, setProcessing] = useState(false);
-  const [pendingTxn, setPendingTxn] = useState(null);
 
   const onSend = () => {
-    try {
-      const txn = sendMoney({
-        counterparty: recipient,
-        amount,
-        title: presetTitle || (note ? note : 'Send Money'),
-      });
-      // Show the processing animation, then open the receipt after a
-      // realistic, variable wait (handled inside ProcessingOverlay).
-      setPendingTxn(txn);
-      setProcessing(true);
-    } catch (e) {
-      Alert.alert('Transaction failed', e.message);
+    const value = Number(amount);
+    if (!recipient.trim()) {
+      Alert.alert('Recipient required', 'Please enter a recipient account or mobile number.');
+      return;
     }
+    if (!value || value <= 0) {
+      Alert.alert('Enter amount', 'Please enter a valid amount.');
+      return;
+    }
+    if (value > balance) {
+      Alert.alert('Insufficient balance', 'This amount exceeds your available balance.');
+      return;
+    }
+    // Confirm on the Review screen; the transfer is sent from there.
+    navigation.navigate('Review', {
+      bank: { name: 'Send Money' },
+      accountNumber: recipient.trim(),
+      accountTitle: presetTitle || 'Recipient',
+      amount,
+      counterparty: recipient.trim(),
+      title: presetTitle || (note ? note : 'Send Money'),
+    });
   };
 
   return (
@@ -95,12 +101,6 @@ export default function SendMoneyScreen({ navigation, route }) {
           saved to your history.
         </Text>
       </ScrollView>
-
-      <ProcessingOverlay
-        visible={processing}
-        amountText={`PKR ${amount}`}
-        onDone={() => navigation.replace('Receipt', { txn: pendingTxn })}
-      />
     </KeyboardAvoidingView>
   );
 }

@@ -84,9 +84,9 @@ export default function ReviewScreen({ navigation, route }) {
     if (processing) return;
     try {
       const txn = acct.sendMoney({
-        counterparty: `${accountTitle} (${accountNumber})`,
+        counterparty: route?.params?.counterparty || `${accountTitle} (${accountNumber})`,
         amount,
-        title: `Transfer to ${bank.name || 'Bank'}`,
+        title: route?.params?.title || `Transfer to ${bank.name || 'Bank'}`,
       });
       setProcessing(true);
       // Irregular 3–15s processing wait, then open the receipt.
