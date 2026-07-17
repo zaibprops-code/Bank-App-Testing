@@ -1,12 +1,14 @@
 import React from 'react';
+import { View, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { AccountProvider } from './src/context/AccountContext';
+import { AccountProvider, useAccount } from './src/context/AccountContext';
 import { SettingsProvider } from './src/context/SettingsContext';
 import AppLockGate from './src/components/AppLockGate';
+import OnboardingScreen from './src/screens/OnboardingScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import TransactionsScreen from './src/screens/TransactionsScreen';
 import SendMoneyScreen from './src/screens/SendMoneyScreen';
@@ -34,16 +36,48 @@ export default function App() {
     <SafeAreaProvider>
       <AccountProvider>
         <SettingsProvider>
-        <StatusBar style="light" />
-        <AppLockGate>
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerStyle: { backgroundColor: colors.primary },
-              headerTintColor: colors.white,
-              headerTitleStyle: { fontWeight: '700' },
-            }}
-          >
+          <StatusBar style="light" />
+          <RootGate />
+        </SettingsProvider>
+      </AccountProvider>
+    </SafeAreaProvider>
+  );
+}
+
+// Decides what to show once account state has loaded: the one-time onboarding
+// (first launch, no name yet) or the main app behind the biometric lock gate.
+function RootGate() {
+  const { loaded, setupComplete } = useAccount();
+
+  if (!loaded) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.screenBg, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator color={colors.primary} size="large" />
+      </View>
+    );
+  }
+
+  if (!setupComplete) {
+    return <OnboardingScreen />;
+  }
+
+  return (
+    <AppLockGate>
+      <MainApp />
+    </AppLockGate>
+  );
+}
+
+function MainApp() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: colors.primary },
+          headerTintColor: colors.white,
+          headerTitleStyle: { fontWeight: '700' },
+        }}
+      >
             <Stack.Screen
               name="Home"
               component={HomeScreen}
@@ -92,11 +126,7 @@ export default function App() {
             <Stack.Screen name="Charges" component={ChargesScreen} options={{ title: 'Schedule of Charges' }} />
             <Stack.Screen name="LocateUs" component={LocateUsScreen} options={{ title: 'Locate Us' }} />
             <Stack.Screen name="ContactUs" component={ContactUsScreen} options={{ title: 'Contact Us' }} />
-          </Stack.Navigator>
-        </NavigationContainer>
-        </AppLockGate>
-        </SettingsProvider>
-      </AccountProvider>
-    </SafeAreaProvider>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

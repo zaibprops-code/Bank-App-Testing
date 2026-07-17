@@ -25,6 +25,49 @@ export function generateReference() {
   return Math.floor(100000000000 + Math.random() * 899999999999).toString();
 }
 
+// ---- Account identity (name -> account number + IBAN) --------------------
+//
+// Pakistan IBANs are 24 characters: PK + 2 check digits + a 4-letter bank code
+// (MEZN for Meezan) + "00" + a 4-digit branch code + a 10-digit customer number.
+// The customer's account number is therefore the 14 digits (branch + number).
+// We generate a fresh, unique 14-digit account number and derive a VALID IBAN
+// from it (ISO 13616 mod-97 check digits), so every setup/name-save is unique.
+
+function randomDigits(n) {
+  let s = '';
+  for (let i = 0; i < n; i++) s += Math.floor(Math.random() * 10);
+  return s;
+}
+
+function ibanFromAccount(account14) {
+  const bban = 'MEZN00' + account14; // 20 chars: bank + 00 + 14-digit account
+  const rearranged = bban + 'PK00'; // move country code + placeholder to the end
+  let numeric = '';
+  for (const ch of rearranged) {
+    numeric += /[0-9]/.test(ch) ? ch : String(ch.charCodeAt(0) - 55); // A=10 … Z=35
+  }
+  let rem = 0;
+  for (const d of numeric) rem = (rem * 10 + Number(d)) % 97;
+  const check = String(98 - rem).padStart(2, '0');
+  return 'PK' + check + bban; // 24 chars
+}
+
+const group = (str, size) => str.replace(new RegExp(`(.{${size}})(?=.)`, 'g'), '$1 ');
+
+// Unique account number + IBAN for a freshly set-up / renamed account.
+export function generateIdentity() {
+  const account14 = randomDigits(14);
+  return {
+    accountNumber: group(account14, 4), // e.g. "0101 2345 6789 01"
+    iban: group(ibanFromAccount(account14), 4), // e.g. "PK10 MEZN 0001 0112 3456 7890"
+  };
+}
+
+// Names are always stored (and shown) in capital letters.
+function normalizeName(name) {
+  return String(name || '').trim().replace(/\s+/g, ' ').toUpperCase();
+}
+
 export function formatMoney(amount) {
   return (
     'PKR ' +
@@ -44,6 +87,7 @@ const initialState = {
   iban: accountConfig.iban,
   branch: accountConfig.branch,
   balance: accountConfig.openingBalance,
+  setupComplete: false, // becomes true once the user enters their name on first launch
   transactions: [
     {
       id: 'TXN-20260714-SEED0001',
@@ -130,13 +174,29 @@ export function AccountProvider({ children }) {
     return txn;
   }
 
-  // Update the account holder's name. Persisted with the rest of the state, so
-  // it flows through the whole app (home greeting, receipts, profile, etc.).
-  function updateAccountTitle(name) {
-    const clean = String(name || '').trim();
+  // Build the profile fields for a (re)named account: the capitalised name plus
+  // a fresh, unique account number and IBAN.
+  function buildProfile(name) {
+    const clean = normalizeName(name);
     if (!clean) throw new Error('Please enter your name.');
-    setState((prev) => ({ ...prev, accountTitle: clean }));
-    return clean;
+    const id = generateIdentity();
+    return { accountTitle: clean, accountNumber: id.accountNumber, iban: id.iban };
+  }
+
+  // First-run setup: the user enters their name and gets an account.
+  function setupProfile(name) {
+    const p = buildProfile(name);
+    setState((prev) => ({ ...prev, ...p, setupComplete: true }));
+    return p.accountTitle;
+  }
+
+  // Update the account holder's name. Each save also regenerates a unique
+  // account number and IBAN. Persisted with the rest of the state, so the name
+  // flows through the whole app (home greeting, receipts, profile, etc.).
+  function updateAccountTitle(name) {
+    const p = buildProfile(name);
+    setState((prev) => ({ ...prev, ...p }));
+    return p.accountTitle;
   }
 
   // Generic credit (used by the demo "Add money" action).
@@ -168,6 +228,7 @@ export function AccountProvider({ children }) {
     loaded,
     sendMoney,
     receiveMoney,
+    setupProfile,
     updateAccountTitle,
     formatMoney,
   };

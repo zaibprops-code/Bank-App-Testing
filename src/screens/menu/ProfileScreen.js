@@ -100,11 +100,15 @@ export default function ProfileScreen() {
           <TextInput
             style={styles.input}
             value={name}
-            onChangeText={setName}
-            placeholder="Enter your name"
-            autoCapitalize="words"
+            onChangeText={(t) => setName(t.toUpperCase())}
+            placeholder="ENTER YOUR NAME"
+            autoCapitalize="characters"
+            autoCorrect={false}
             placeholderTextColor={colors.textMuted}
           />
+          <Text style={styles.hintText}>
+            Saving regenerates a unique account number and IBAN.
+          </Text>
         </View>
 
         <View style={styles.card}>
@@ -182,6 +186,7 @@ const styles = StyleSheet.create({
   infoValue: { fontSize: 13.5, color: colors.textDark, fontWeight: '700', flexShrink: 1, textAlign: 'right', marginLeft: spacing.md },
 
   fieldLabel: { fontSize: 13, color: colors.textMuted, marginBottom: 6, marginTop: spacing.sm },
+  hintText: { fontSize: 11.5, color: colors.textMuted, marginTop: 6, fontStyle: 'italic' },
   input: {
     borderWidth: 1,
     borderColor: '#E1E1E6',
