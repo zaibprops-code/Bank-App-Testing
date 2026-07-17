@@ -27,10 +27,16 @@ function initialsOf(name) {
 }
 
 export default function ProfileScreen() {
-  const { accountTitle, accountLabel, accountNumber, iban, branch } = useAccount();
+  const { accountTitle, accountLabel, accountNumber, iban, branch, updateAccountTitle } = useAccount();
+  const [name, setName] = useState(accountTitle);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [saving, setSaving] = useState(false);
+
+  // Keep the field in sync when the stored name loads / changes.
+  useEffect(() => {
+    setName(accountTitle);
+  }, [accountTitle]);
 
   useEffect(() => {
     (async () => {
@@ -46,6 +52,10 @@ export default function ProfileScreen() {
   }, []);
 
   const onSave = async () => {
+    if (!name.trim()) {
+      Alert.alert('Name required', 'Please enter your name.');
+      return;
+    }
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       Alert.alert('Invalid email', 'Please enter a valid email address.');
       return;
@@ -56,8 +66,9 @@ export default function ProfileScreen() {
     }
     try {
       setSaving(true);
+      updateAccountTitle(name);
       await AsyncStorage.setItem(PROFILE_KEY, JSON.stringify({ email, phone }));
-      Alert.alert('Profile updated', 'Your contact details have been saved.');
+      Alert.alert('Profile updated', 'Your profile has been saved.');
     } catch (e) {
       Alert.alert('Error', 'Could not save your profile. Please try again.');
     } finally {
@@ -77,10 +88,23 @@ export default function ProfileScreen() {
       <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
         <View style={styles.avatarWrap}>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{initialsOf(accountTitle) || 'U'}</Text>
+            <Text style={styles.avatarText}>{initialsOf(name) || 'U'}</Text>
           </View>
-          <Text style={styles.name}>{accountTitle}</Text>
+          <Text style={styles.name}>{name.trim() || accountTitle}</Text>
           <Text style={styles.sub}>{accountLabel}</Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Personal Information</Text>
+          <Text style={styles.fieldLabel}>Full Name</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            placeholder="Enter your name"
+            autoCapitalize="words"
+            placeholderTextColor={colors.textMuted}
+          />
         </View>
 
         <View style={styles.card}>

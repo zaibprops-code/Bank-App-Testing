@@ -130,6 +130,15 @@ export function AccountProvider({ children }) {
     return txn;
   }
 
+  // Update the account holder's name. Persisted with the rest of the state, so
+  // it flows through the whole app (home greeting, receipts, profile, etc.).
+  function updateAccountTitle(name) {
+    const clean = String(name || '').trim();
+    if (!clean) throw new Error('Please enter your name.');
+    setState((prev) => ({ ...prev, accountTitle: clean }));
+    return clean;
+  }
+
   // Generic credit (used by the demo "Add money" action).
   function receiveMoney({ counterparty, amount, title = 'Credit' }) {
     const value = Number(amount);
@@ -159,6 +168,7 @@ export function AccountProvider({ children }) {
     loaded,
     sendMoney,
     receiveMoney,
+    updateAccountTitle,
     formatMoney,
   };
 
