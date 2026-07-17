@@ -82,7 +82,7 @@ function Party({ label, name, account, logo, fallbackInitial }) {
           <Text style={styles.partyLogoInitial}>{fallbackInitial}</Text>
         </View>
       )}
-      <View style={{ flex: 1 }}>
+      <View style={styles.partyText}>
         <Text style={styles.partyLabel}>{label}</Text>
         <Text style={styles.partyName} numberOfLines={1}>{name}</Text>
         {!!account && <Text style={styles.partyAccount}>{account}</Text>}
@@ -132,26 +132,29 @@ function ReceiptDetails({
 
       <DashedLine />
 
-      {/* Sender / recipient block — inset from the card edges so it reads as a
-          neat, centred group under the amount instead of hugging the left edge. */}
+      {/* Sender / recipient block — the two rows form one group that is centred
+          horizontally in the card (equal space left and right), while the From
+          and To logos stay aligned with each other. */}
       <View style={styles.partyBlock}>
-        <Party
-          label="From Account:"
-          name={fromName}
-          account={fromAccount}
-          logo={fromLogo}
-          fallbackInitial={(fromName || 'A').charAt(0)}
-        />
+        <View style={styles.partyGroup}>
+          <Party
+            label="From Account:"
+            name={fromName}
+            account={fromAccount}
+            logo={fromLogo}
+            fallbackInitial={(fromName || 'A').charAt(0)}
+          />
 
-        <View style={{ height: spacing.lg }} />
+          <View style={{ height: spacing.lg }} />
 
-        <Party
-          label="To Account:"
-          name={toName}
-          account={toAccount}
-          logo={toLogo}
-          fallbackInitial={(toName || 'B').charAt(0)}
-        />
+          <Party
+            label="To Account:"
+            name={toName}
+            account={toAccount}
+            logo={toLogo}
+            fallbackInitial={(toName || 'B').charAt(0)}
+          />
+        </View>
       </View>
 
       <DashedLine />
@@ -400,7 +403,10 @@ const styles = StyleSheet.create({
   // absolutely positioned on top (see floatingTick), so no zIndex is needed
   // and the image capture never clips it.
   cardStack: { paddingTop: 48 },
-  floatingTick: { position: 'absolute', top: 0, left: 0, right: 0, alignItems: 'center' },
+  // zIndex keeps the tick painted above the card. The card carries no Android
+  // elevation (below) so it can't composite on top of the tick and hide it in
+  // the shared / saved image.
+  floatingTick: { position: 'absolute', top: 0, left: 0, right: 0, alignItems: 'center', zIndex: 5 },
   tickImage: { width: 84, height: 84 },
 
   card: {
@@ -409,7 +415,6 @@ const styles = StyleSheet.create({
     paddingTop: 48,
     paddingBottom: spacing.lg,
     paddingHorizontal: spacing.lg,
-    elevation: 2,
     shadowColor: '#000',
     shadowOpacity: 0.08,
     shadowRadius: 6,
@@ -452,7 +457,7 @@ const styles = StyleSheet.create({
   watermarkOffset: { marginLeft: 52 },
   amountText: { fontSize: 30, fontWeight: '600', color: colors.accentGreen, letterSpacing: 0.5 },
 
-  dateText: { textAlign: 'center', color: colors.textDark, fontSize: 13.5, marginTop: spacing.md, fontWeight: '600' },
+  dateText: { textAlign: 'center', color: colors.textMuted, fontSize: 13.5, marginTop: spacing.md, fontWeight: '400' },
 
   // Manually drawn dashed divider (see DashedLine). overflow:'hidden' clips
   // the trailing dashes so the line ends flush with the card padding.
@@ -469,10 +474,13 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
 
-  // Inset from both card edges so the sender / recipient rows sit with
-  // balanced left and right spacing instead of hugging the left edge.
-  partyBlock: { paddingHorizontal: spacing.xl },
+  // Centre the whole sender / recipient group in the card. partyGroup sizes to
+  // its widest row, so the two rows share a left edge (logos aligned) while the
+  // group as a whole sits centred with equal space on both sides.
+  partyBlock: { alignItems: 'center' },
+  partyGroup: { alignSelf: 'center' },
   party: { flexDirection: 'row', alignItems: 'center' },
+  partyText: { maxWidth: 210 },
   partyLogo: { width: 44, height: 44, marginRight: 14 },
   partyLogoFallback: {
     width: 44,
