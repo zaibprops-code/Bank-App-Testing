@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   amount: { fontSize: 36, fontWeight: '800', color: colors.textDark, letterSpacing: 1 },
   barsOverlay: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center' },
   bars: { flexDirection: 'row', alignItems: 'center' },
-  bar: { width: 9, height: 34, borderRadius: 4, marginHorizontal: 3.5 },
+  bar: { width: 9, height: 34, borderRadius: 0, marginHorizontal: 0.75 },
 
   secured: { flexDirection: 'row', alignItems: 'center', marginTop: 34 },
   securedText: { marginLeft: 6, color: colors.primary, fontWeight: '700', fontSize: 13 },
