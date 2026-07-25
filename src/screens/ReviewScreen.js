@@ -193,9 +193,6 @@ export default function ReviewScreen({ navigation, route }) {
       {processing && (
         <View style={styles.processingOverlay}>
           <ProcessingBars />
-          <Text style={[styles.processingNote, { bottom: insets.bottom + 48 }]}>
-            Please wait, your payment is being processed…
-          </Text>
         </View>
       )}
     </View>
@@ -243,7 +240,6 @@ const styles = StyleSheet.create({
     zIndex: 50,
     elevation: 50,
   },
-  processingNote: { position: 'absolute', color: colors.textMuted, fontSize: 13, textAlign: 'center', paddingHorizontal: spacing.xl },
 
   divider: { height: StyleSheet.hairlineWidth, backgroundColor: '#C9C9CE', marginVertical: spacing.md },
 
