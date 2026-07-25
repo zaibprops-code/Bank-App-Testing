@@ -51,7 +51,11 @@ jobs:
           echo "" >> android/gradle.properties
           echo "org.gradle.jvmargs=-Xmx6144m -XX:MaxMetaspaceSize=1536m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" >> android/gradle.properties
           echo "org.gradle.workers.max=2" >> android/gradle.properties
-          echo "android.enableJetifier=false" >> android/gradle.properties
+          # Jetifier substitutes the legacy com.android.support:*:25.x artifacts
+          # (pulled in transitively) with their AndroidX equivalents. Without it,
+          # they collide with androidx.core / androidx.media and the build fails
+          # with "Duplicate class android.support.v4.*".
+          echo "android.enableJetifier=true" >> android/gradle.properties
 
       - name: Build release APK (standalone, JS bundled inside)
         working-directory: android
