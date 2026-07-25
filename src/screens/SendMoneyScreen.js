@@ -10,21 +10,27 @@ import {
   Platform,
   Alert,
 } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useAccount } from '../context/AccountContext';
 import { colors, spacing } from '../theme';
 
 export default function SendMoneyScreen({ navigation, route }) {
-  const presetTitle = route?.params?.presetTitle;
+  const params = route?.params || {};
+  const presetTitle = params.presetTitle;
+  const scanned = Boolean(params.scanned);
   const { balance, formatMoney } = useAccount();
-  const [recipientName, setRecipientName] = useState('');
-  const [recipient, setRecipient] = useState('');
-  const [amount, setAmount] = useState('');
+  // Pre-fill from a scanned QR when those params are present.
+  const [recipientName, setRecipientName] = useState(params.prefillName || '');
+  const [recipient, setRecipient] = useState(params.prefillAccount || '');
+  const [tillId, setTillId] = useState(params.prefillTillId || '');
+  const [amount, setAmount] = useState(params.prefillAmount || '');
   const [note, setNote] = useState('');
 
   const onSend = () => {
     const value = Number(amount);
     const name = recipientName.trim();
     const account = recipient.trim();
+    const till = tillId.trim();
     if (!name) {
       Alert.alert('Recipient name required', "Please enter the recipient's name.");
       return;
@@ -43,14 +49,16 @@ export default function SendMoneyScreen({ navigation, route }) {
     }
     // Confirm on the Review screen; the transfer is sent from there. The
     // recipient's name is shown as the payee title, with the account/mobile
-    // number as the sub-line, and both are recorded on the transaction.
+    // number as the sub-line, and both are recorded on the transaction. A till /
+    // merchant ID (typically from a scanned QR) is preserved in the title.
+    const baseTitle = note.trim() || presetTitle || 'Send Money';
     navigation.navigate('Review', {
       bank: { name: 'Send Money' },
       accountNumber: account,
       accountTitle: name,
       amount,
       counterparty: `${name} (${account})`,
-      title: presetTitle || (note ? note : 'Send Money'),
+      title: till ? `${baseTitle} · Till ${till}` : baseTitle,
     });
   };
 
@@ -68,6 +76,15 @@ export default function SendMoneyScreen({ navigation, route }) {
         {presetTitle ? (
           <View style={styles.presetPill}>
             <Text style={styles.presetPillText}>{presetTitle}</Text>
+          </View>
+        ) : null}
+
+        {scanned ? (
+          <View style={styles.scanBanner}>
+            <MaterialCommunityIcons name="qrcode-scan" size={18} color={colors.accentGreen} />
+            <Text style={styles.scanBannerText}>
+              Details filled from the scanned QR. Review and confirm below.
+            </Text>
           </View>
         ) : null}
 
@@ -89,6 +106,16 @@ export default function SendMoneyScreen({ navigation, route }) {
           placeholderTextColor={colors.textMuted}
           value={recipient}
           onChangeText={setRecipient}
+          keyboardType="default"
+        />
+
+        <Text style={styles.label}>Till ID / Merchant ID (optional)</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="e.g. 100234 (auto-filled when scanning a QR)"
+          placeholderTextColor={colors.textMuted}
+          value={tillId}
+          onChangeText={setTillId}
           keyboardType="default"
         />
 
@@ -144,6 +171,16 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   presetPillText: { color: colors.primary, fontWeight: '700', fontSize: 12 },
+  scanBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E7F6ED',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginBottom: spacing.sm,
+  },
+  scanBannerText: { flex: 1, marginLeft: 8, color: '#1B7A3D', fontSize: 12.5, fontWeight: '600', lineHeight: 17 },
   label: {
     fontSize: 13,
     fontWeight: '600',

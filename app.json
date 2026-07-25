@@ -15,6 +15,12 @@
     "assetBundlePatterns": ["**/*"],
     "plugins": [
       [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to use the camera to scan payment QR codes."
+        }
+      ],
+      [
         "expo-media-library",
         {
           "photosPermission": "Allow $(PRODUCT_NAME) to save transaction receipts to your gallery.",
@@ -39,6 +45,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.example.bankapptesting",
       "infoPlist": {
+        "NSCameraUsageDescription": "Allow Meezan Bank to use the camera to scan payment QR codes.",
         "NSPhotoLibraryAddUsageDescription": "Allow Meezan Bank to save transaction receipts to your gallery.",
         "NSLocationWhenInUseUsageDescription": "Allow Meezan Bank to use your location to find the Qibla direction and nearby branches.",
         "NSFaceIDUsageDescription": "Allow Meezan Bank to use Face ID to unlock the app."

@@ -12,6 +12,7 @@ import OnboardingScreen from './src/screens/OnboardingScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import TransactionsScreen from './src/screens/TransactionsScreen';
 import SendMoneyScreen from './src/screens/SendMoneyScreen';
+import QrScanScreen from './src/screens/QrScanScreen';
 import NewTransferScreen from './src/screens/NewTransferScreen';
 import BankTransferScreen from './src/screens/BankTransferScreen';
 import AmountScreen from './src/screens/AmountScreen';
@@ -113,6 +114,11 @@ function MainApp() {
               name="SendMoney"
               component={SendMoneyScreen}
               options={{ title: 'Send Money' }}
+            />
+            <Stack.Screen
+              name="QrScan"
+              component={QrScanScreen}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Receipt"

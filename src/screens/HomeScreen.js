@@ -146,6 +146,7 @@ export default function HomeScreen({ navigation }) {
 
   const onTilePress = (item) => {
     if (item.key === 'send') navigation.navigate('NewTransfer');
+    else if (item.key === 'qr') navigation.navigate('QrScan');
     else navigation.navigate('SendMoney', { presetTitle: item.label });
   };
 
