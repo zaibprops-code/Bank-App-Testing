@@ -17,8 +17,8 @@ const BAR_COLORS = [
 // fast (PULSE up + PULSE down), and the strips fire strictly in sequence: the
 // whole row cycles once every PERIOD ms, with each strip offset by PERIOD / N
 // so exactly one is expanding at a time (a distinct pop, not a flowing wave).
-const PULSE = 80;
-const PERIOD = PULSE * 2 * BAR_COLORS.length; // 960ms for 6 strips
+const PULSE = 45;
+const PERIOD = PULSE * 2 * BAR_COLORS.length; // 540ms for 6 strips
 
 // A single strip that expands up and down from its centre, then rests until its
 // turn comes round again.
