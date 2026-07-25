@@ -39,7 +39,7 @@ function Bar({ color, delay }) {
   }, []);
   // Rests as a small stub and grows symmetrically from the centre (default
   // transform origin), so the strip expands both up and down from short to tall.
-  const scaleY = v.interpolate({ inputRange: [0, 1], outputRange: [1, 8] });
+  const scaleY = v.interpolate({ inputRange: [0, 1], outputRange: [1, 10] });
   return <Animated.View style={[styles.bar, { backgroundColor: color, transform: [{ scaleY }] }]} />;
 }
 
