@@ -152,15 +152,10 @@ export default function ReviewScreen({ navigation, route }) {
           </View>
         </View>
 
-        {/* Amount + words (bars ripple over the amount while processing) */}
+        {/* Amount + words */}
         <View style={styles.amountWrap}>
           <View style={styles.amountRow}>
             <Text style={styles.amount}>{amountDisplay}</Text>
-            {processing && (
-              <View style={styles.barsOverlay} pointerEvents="none">
-                <ProcessingBars />
-              </View>
-            )}
           </View>
           <Text style={styles.words}>{words}</Text>
         </View>
@@ -193,6 +188,16 @@ export default function ReviewScreen({ navigation, route }) {
       >
         <Text style={styles.sendText}>{processing ? 'Processing…' : 'Send Now'}</Text>
       </TouchableOpacity>
+
+      {/* Processing overlay — the bars sit in the exact centre of the screen. */}
+      {processing && (
+        <View style={styles.processingOverlay}>
+          <ProcessingBars />
+          <Text style={[styles.processingNote, { bottom: insets.bottom + 48 }]}>
+            Please wait, your payment is being processed…
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -227,8 +232,17 @@ const styles = StyleSheet.create({
   amountWrap: { alignItems: 'center', marginTop: spacing.lg, marginBottom: spacing.md },
   amountRow: { justifyContent: 'center', alignItems: 'center', minHeight: 44 },
   amount: { fontSize: 34, fontWeight: '800', color: colors.textDark, letterSpacing: 0.5 },
-  barsOverlay: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center' },
   words: { fontSize: 13, color: colors.textMuted, marginTop: 6 },
+
+  processingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.96)',
+    zIndex: 50,
+    elevation: 50,
+  },
+  processingNote: { position: 'absolute', color: colors.textMuted, fontSize: 13, textAlign: 'center', paddingHorizontal: spacing.xl },
 
   divider: { height: StyleSheet.hairlineWidth, backgroundColor: '#C9C9CE', marginVertical: spacing.md },
 

@@ -13,30 +13,41 @@ const BAR_COLORS = [
   colors.primary,     // purple
 ];
 
-// A single strip that bobs up and down on a loop.
+// Timing for the one-by-one expansion. Each strip snaps taller then back very
+// fast (PULSE up + PULSE down), and the strips fire strictly in sequence: the
+// whole row cycles once every PERIOD ms, with each strip offset by PERIOD / N
+// so exactly one is expanding at a time (a distinct pop, not a flowing wave).
+const PULSE = 80;
+const PERIOD = PULSE * 2 * BAR_COLORS.length; // 960ms for 6 strips
+
+// A single strip that expands up and down from its centre, then rests until its
+// turn comes round again.
 function Bar({ color, delay }) {
   const v = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     let stopped = false;
     const loop = Animated.loop(
       Animated.sequence([
-        Animated.timing(v, { toValue: 1, duration: 320, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
-        Animated.timing(v, { toValue: 0, duration: 320, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+        Animated.timing(v, { toValue: 1, duration: PULSE, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+        Animated.timing(v, { toValue: 0, duration: PULSE, easing: Easing.in(Easing.quad), useNativeDriver: true }),
+        // Hold flat until every other strip has had its turn this cycle.
+        Animated.delay(PERIOD - PULSE * 2),
       ])
     );
-    // Stagger each strip so together they ripple up and down like a wave.
     const t = setTimeout(() => { if (!stopped) loop.start(); }, delay);
     return () => { stopped = true; clearTimeout(t); loop.stop(); };
   }, []);
-  const translateY = v.interpolate({ inputRange: [0, 1], outputRange: [9, -9] });
-  return <Animated.View style={[styles.bar, { backgroundColor: color, transform: [{ translateY }] }]} />;
+  // Grows symmetrically from the centre (default transform origin), so the
+  // strip expands both up and down at once.
+  const scaleY = v.interpolate({ inputRange: [0, 1], outputRange: [1, 2.3] });
+  return <Animated.View style={[styles.bar, { backgroundColor: color, transform: [{ scaleY }] }]} />;
 }
 
 export function ProcessingBars() {
   return (
     <View style={styles.bars}>
       {BAR_COLORS.map((c, i) => (
-        <Bar key={i} color={c} delay={i * 90} />
+        <Bar key={i} color={c} delay={i * (PERIOD / BAR_COLORS.length)} />
       ))}
     </View>
   );
