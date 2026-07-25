@@ -37,9 +37,9 @@ function Bar({ color, delay }) {
     const t = setTimeout(() => { if (!stopped) loop.start(); }, delay);
     return () => { stopped = true; clearTimeout(t); loop.stop(); };
   }, []);
-  // Grows symmetrically from the centre (default transform origin), so the
-  // strip expands both up and down at once.
-  const scaleY = v.interpolate({ inputRange: [0, 1], outputRange: [1, 2.3] });
+  // Rests as a small stub and grows symmetrically from the centre (default
+  // transform origin), so the strip expands both up and down from short to tall.
+  const scaleY = v.interpolate({ inputRange: [0, 1], outputRange: [1, 4.5] });
   return <Animated.View style={[styles.bar, { backgroundColor: color, transform: [{ scaleY }] }]} />;
 }
 
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   amount: { fontSize: 36, fontWeight: '800', color: colors.textDark, letterSpacing: 1 },
   barsOverlay: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center' },
   bars: { flexDirection: 'row', alignItems: 'center' },
-  bar: { width: 9, height: 34, borderRadius: 0, marginHorizontal: 0.75 },
+  bar: { width: 9, height: 10, borderRadius: 0, marginHorizontal: 0.75 },
 
   secured: { flexDirection: 'row', alignItems: 'center', marginTop: 34 },
   securedText: { marginLeft: 6, color: colors.primary, fontWeight: '700', fontSize: 13 },
