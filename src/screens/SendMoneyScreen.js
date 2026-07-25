@@ -16,13 +16,20 @@ import { colors, spacing } from '../theme';
 export default function SendMoneyScreen({ navigation, route }) {
   const presetTitle = route?.params?.presetTitle;
   const { balance, formatMoney } = useAccount();
+  const [recipientName, setRecipientName] = useState('');
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
 
   const onSend = () => {
     const value = Number(amount);
-    if (!recipient.trim()) {
+    const name = recipientName.trim();
+    const account = recipient.trim();
+    if (!name) {
+      Alert.alert('Recipient name required', "Please enter the recipient's name.");
+      return;
+    }
+    if (!account) {
       Alert.alert('Recipient required', 'Please enter a recipient account or mobile number.');
       return;
     }
@@ -34,13 +41,15 @@ export default function SendMoneyScreen({ navigation, route }) {
       Alert.alert('Insufficient balance', 'This amount exceeds your available balance.');
       return;
     }
-    // Confirm on the Review screen; the transfer is sent from there.
+    // Confirm on the Review screen; the transfer is sent from there. The
+    // recipient's name is shown as the payee title, with the account/mobile
+    // number as the sub-line, and both are recorded on the transaction.
     navigation.navigate('Review', {
       bank: { name: 'Send Money' },
-      accountNumber: recipient.trim(),
-      accountTitle: presetTitle || 'Recipient',
+      accountNumber: account,
+      accountTitle: name,
       amount,
-      counterparty: recipient.trim(),
+      counterparty: `${name} (${account})`,
       title: presetTitle || (note ? note : 'Send Money'),
     });
   };
@@ -61,6 +70,17 @@ export default function SendMoneyScreen({ navigation, route }) {
             <Text style={styles.presetPillText}>{presetTitle}</Text>
           </View>
         ) : null}
+
+        <Text style={styles.label}>Recipient Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="e.g. Ahmed Khan"
+          placeholderTextColor={colors.textMuted}
+          value={recipientName}
+          onChangeText={setRecipientName}
+          keyboardType="default"
+          autoCapitalize="words"
+        />
 
         <Text style={styles.label}>Recipient Account / Mobile Number</Text>
         <TextInput
