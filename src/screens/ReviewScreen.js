@@ -238,7 +238,8 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.96)',
+    // Transparent — the Review content stays visible behind the animation.
+    backgroundColor: 'transparent',
     zIndex: 50,
     elevation: 50,
   },
