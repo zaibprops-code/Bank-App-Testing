@@ -40,13 +40,38 @@ export default function QrScanScreen({ navigation }) {
       }
       handledRef.current = true;
       setHandled(true);
+
+      const name = (parsed.name || '').trim();
+      const account = (parsed.account || '').trim();
+      const till = (parsed.tillId || '').trim();
+      const amount = /^\d+(\.\d+)?$/.test(parsed.amount) ? parsed.amount : '';
+      const amountValid = amount !== '' && Number(amount) > 0;
+
+      // Fast tap-to-pay: when the QR already carries a payee name, an account
+      // and a fixed amount, skip the entry form and go straight to Review for
+      // confirmation. The balance check happens on Send Now.
+      if (name && account && amountValid) {
+        const baseTitle = till ? `QR Payment · Till ${till}` : 'QR Payment';
+        navigation.replace('Review', {
+          bank: { name: 'QR Payment' },
+          accountNumber: account,
+          accountTitle: name,
+          amount,
+          counterparty: `${name} (${account})`,
+          title: baseTitle,
+        });
+        return;
+      }
+
+      // Otherwise pre-fill the Send Money form so the user can complete the
+      // missing detail (usually the amount).
       navigation.replace('SendMoney', {
         presetTitle: 'QR Payments',
         scanned: true,
-        prefillName: parsed.name,
-        prefillAccount: parsed.account,
-        prefillTillId: parsed.tillId,
-        prefillAmount: /^\d+(\.\d+)?$/.test(parsed.amount) ? parsed.amount : '',
+        prefillName: name,
+        prefillAccount: account,
+        prefillTillId: till,
+        prefillAmount: amount,
         prefillCity: parsed.city,
       });
     },
